@@ -1,0 +1,61 @@
+#ifndef CARD_H
+#define CARD_H
+
+#include "my_exception.h"
+#include <QDebug>
+#include <QGraphicsPixmapItem>
+#include <QPalette>
+#include <QSize>
+#include <fstream>
+#include <iostream>
+
+using namespace std;
+
+enum Cards
+{
+    PirateFlag,
+    Parrot,
+    Map,
+    Treasure,
+    SkullKing,
+    Queen,
+    Pirate
+};
+
+Cards from_int_to_Cards(int n);
+string from_Cards_to_string(Cards cards);
+class Card
+{
+  private:
+    Cards Name;
+    int Number;
+    bool deleted;
+    QPixmap pix_map;
+    static const QSize scale;
+    QSize pixmap_size;
+    // QGraphicsPixmapItem *pix_item;
+
+  public:
+    Card();
+    Card(Cards name, int number);
+    bool operator<(const Card card) const;
+    bool operator==(const Card &card);
+    friend ostream &operator<<(ostream &out, Card &card);
+    friend istream &operator>>(istream &in, Card &card);
+    void delete_it();
+    void undelete_it();
+    bool is_deleted();
+    QPalette palette();
+    QPixmap pixmap();
+    QSize pix_size();
+    void save();
+    void load();
+    bool check_hand(Card &ground, Card &choose, vector<Card> hand);
+    int compare(Card &card);
+    // friend QDataStream &operator<<(QDataStream &out, Card &card);
+    // friend QDataStream &operator>>(QDataStream &in, Card &card);
+    // void load_pixmap();
+    // QGraphicsPixmapItem *pixmap_item();
+};
+
+#endif // CARD_H
