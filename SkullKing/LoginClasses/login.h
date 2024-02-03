@@ -2,6 +2,7 @@
 #define LOGIN_H
 
 #include "MyClasses/king.h"
+#include "LoginClasses/signup.h"
 #include <QMediaPlayer>
 #include <QAudioOutput>
 #include <QUrl>
@@ -33,6 +34,7 @@ private:
     Ui::Login *ui;
     QMediaPlayer *player;
     QAudioOutput *output;
+    SignUp *signup;
 };
 
 #endif // LOGIN_H

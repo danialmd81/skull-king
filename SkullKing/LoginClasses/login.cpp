@@ -8,15 +8,18 @@ Login::Login(QWidget *parent)
     output = new QAudioOutput;
     player->setAudioOutput(output);
     player->setSource(QUrl("qrc:/Resource/Audio/pirate-of-caribbean.mp3"));
+    player->setLoops(-1);
     output->setVolume(30);
     player->play();
-
     ui->setupUi(this);
 }
 
 Login::~Login()
 {
     delete ui;
+    delete player;
+    delete output;
+    delete signup;
 }
 
 void Login::on_SginIn_clicked()
@@ -44,29 +47,33 @@ void Login::on_SginIn_clicked()
                 this->accept();
             }
         }
-        QMessageBox error(QMessageBox::Critical, "Login", "Username or Password is incorrect");
-        error.setWindowIcon(this->windowIcon());
-        error.setStyleSheet("font: 700 12pt \" Cascadia Mono \";color: rgb(255, 0, 0);");
-        error.exec();
+        else
+        {
+            QMessageBox error(QMessageBox::Critical, "Login", "Username or Password is incorrect");
+            error.setWindowIcon(this->windowIcon());
+            error.setStyleSheet("font: 700 12pt \" Cascadia Mono \";color: rgb(255, 0, 0);");
+            error.exec();
+        }
     }
 }
 
 void Login::on_SignUp_clicked()
 {
+    signup = new SignUp(this);
+    signup->exec();
 }
 
 void Login::on_ShowPassword_stateChanged(int arg1)
 {
     if (arg1 == 2)
         ui->password->setEchoMode(QLineEdit::Normal);
-
     else
         ui->password->setEchoMode(QLineEdit::Password);
-    return;
 }
 
 void Login::on_ForgotPasswprd_clicked()
 {
+    
 }
 
 void Login::on_Exit_clicked()

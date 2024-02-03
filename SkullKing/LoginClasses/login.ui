@@ -6,22 +6,22 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1127</width>
-    <height>601</height>
+    <width>893</width>
+    <height>509</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Login</string>
   </property>
   <property name="windowIcon">
-   <iconset>
-    <normaloff>:/Pictures/Game/SkullMark.png</normaloff>:/Pictures/Game/SkullMark.png</iconset>
+   <iconset resource="../Resource.qrc">
+    <normaloff>:/Resource/Game/SkullMark.png</normaloff>:/Resource/Game/SkullMark.png</iconset>
   </property>
   <property name="styleSheet">
    <string notr="true">background-image: url(:/Resource/Game/loginBG.jpg);
 border-image: url(:/Resource/Game/GameIcon.png);
-font: 700 12pt &quot;Cascadia Mono&quot;;
-color: rgb(255, 255, 255);</string>
+color: rgb(255, 255, 255);
+font: 14pt &quot;IranNastaliq&quot;;</string>
   </property>
   <layout class="QGridLayout" name="gridLayout_3">
    <item row="0" column="0">
@@ -80,13 +80,20 @@ color: rgb(255, 255, 255);</string>
               </size>
              </property>
              <property name="styleSheet">
-              <string notr="true">border-image: url(:/Pictures/Game/Background.png);</string>
+              <string notr="true">border-image: url(:/Pictures/Game/Background.png);
+background: transparent;</string>
              </property>
              <property name="text">
               <string>Username</string>
              </property>
+             <property name="scaledContents">
+              <bool>false</bool>
+             </property>
              <property name="alignment">
               <set>Qt::AlignCenter</set>
+             </property>
+             <property name="indent">
+              <number>0</number>
              </property>
             </widget>
            </item>
@@ -99,7 +106,12 @@ color: rgb(255, 255, 255);</string>
               </size>
              </property>
              <property name="styleSheet">
-              <string notr="true">border-image: url(:/Pictures/Game/Background.png);</string>
+              <string notr="true">border-image: url(:/Pictures/Game/Background.png);
+background: transparent;
+</string>
+             </property>
+             <property name="frame">
+              <bool>false</bool>
              </property>
              <property name="alignment">
               <set>Qt::AlignCenter</set>
@@ -145,7 +157,8 @@ color: rgb(255, 255, 255);</string>
               </size>
              </property>
              <property name="styleSheet">
-              <string notr="true">border-image: url(:/Pictures/Game/Background.png);</string>
+              <string notr="true">border-image: url(:/Pictures/Game/Background.png);
+background: transparent;</string>
              </property>
              <property name="text">
               <string>Password</string>
@@ -164,7 +177,11 @@ color: rgb(255, 255, 255);</string>
               </size>
              </property>
              <property name="styleSheet">
-              <string notr="true">border-image: url(:/Pictures/Game/Background.png);</string>
+              <string notr="true">border-image: url(:/Pictures/Game/Background.png);
+background: transparent;</string>
+             </property>
+             <property name="frame">
+              <bool>false</bool>
              </property>
              <property name="echoMode">
               <enum>QLineEdit::Password</enum>
@@ -196,10 +213,10 @@ color: rgb(255, 255, 255);</string>
                 </colorrole>
                 <colorrole role="Button">
                  <brush brushstyle="SolidPattern">
-                  <color alpha="255">
-                   <red>255</red>
-                   <green>255</green>
-                   <blue>255</blue>
+                  <color alpha="0">
+                   <red>0</red>
+                   <green>0</green>
+                   <blue>0</blue>
                   </color>
                  </brush>
                 </colorrole>
@@ -268,19 +285,19 @@ color: rgb(255, 255, 255);</string>
                 </colorrole>
                 <colorrole role="Base">
                  <brush brushstyle="SolidPattern">
-                  <color alpha="255">
-                   <red>255</red>
-                   <green>255</green>
-                   <blue>255</blue>
+                  <color alpha="0">
+                   <red>0</red>
+                   <green>0</green>
+                   <blue>0</blue>
                   </color>
                  </brush>
                 </colorrole>
                 <colorrole role="Window">
                  <brush brushstyle="SolidPattern">
-                  <color alpha="255">
-                   <red>255</red>
-                   <green>255</green>
-                   <blue>255</blue>
+                  <color alpha="0">
+                   <red>0</red>
+                   <green>0</green>
+                   <blue>0</blue>
                   </color>
                  </brush>
                 </colorrole>
@@ -351,10 +368,10 @@ color: rgb(255, 255, 255);</string>
                 </colorrole>
                 <colorrole role="Button">
                  <brush brushstyle="SolidPattern">
-                  <color alpha="255">
-                   <red>255</red>
-                   <green>255</green>
-                   <blue>255</blue>
+                  <color alpha="0">
+                   <red>0</red>
+                   <green>0</green>
+                   <blue>0</blue>
                   </color>
                  </brush>
                 </colorrole>
@@ -423,19 +440,19 @@ color: rgb(255, 255, 255);</string>
                 </colorrole>
                 <colorrole role="Base">
                  <brush brushstyle="SolidPattern">
-                  <color alpha="255">
-                   <red>255</red>
-                   <green>255</green>
-                   <blue>255</blue>
+                  <color alpha="0">
+                   <red>0</red>
+                   <green>0</green>
+                   <blue>0</blue>
                   </color>
                  </brush>
                 </colorrole>
                 <colorrole role="Window">
                  <brush brushstyle="SolidPattern">
-                  <color alpha="255">
-                   <red>255</red>
-                   <green>255</green>
-                   <blue>255</blue>
+                  <color alpha="0">
+                   <red>0</red>
+                   <green>0</green>
+                   <blue>0</blue>
                   </color>
                  </brush>
                 </colorrole>
@@ -506,10 +523,10 @@ color: rgb(255, 255, 255);</string>
                 </colorrole>
                 <colorrole role="Button">
                  <brush brushstyle="SolidPattern">
-                  <color alpha="255">
-                   <red>255</red>
-                   <green>255</green>
-                   <blue>255</blue>
+                  <color alpha="0">
+                   <red>0</red>
+                   <green>0</green>
+                   <blue>0</blue>
                   </color>
                  </brush>
                 </colorrole>
@@ -578,19 +595,19 @@ color: rgb(255, 255, 255);</string>
                 </colorrole>
                 <colorrole role="Base">
                  <brush brushstyle="SolidPattern">
-                  <color alpha="255">
-                   <red>255</red>
-                   <green>255</green>
-                   <blue>255</blue>
+                  <color alpha="0">
+                   <red>0</red>
+                   <green>0</green>
+                   <blue>0</blue>
                   </color>
                  </brush>
                 </colorrole>
                 <colorrole role="Window">
                  <brush brushstyle="SolidPattern">
-                  <color alpha="255">
-                   <red>255</red>
-                   <green>255</green>
-                   <blue>255</blue>
+                  <color alpha="0">
+                   <red>0</red>
+                   <green>0</green>
+                   <blue>0</blue>
                   </color>
                  </brush>
                 </colorrole>
@@ -652,11 +669,11 @@ color: rgb(255, 255, 255);</string>
               </palette>
              </property>
              <property name="autoFillBackground">
-              <bool>true</bool>
+              <bool>false</bool>
              </property>
              <property name="styleSheet">
               <string notr="true">border-image: url(:/Pictures/Game/Background.png);
-color: rgb(0, 0, 255);</string>
+background: transparent;</string>
              </property>
              <property name="text">
               <string>Show Password</string>
@@ -762,14 +779,18 @@ color: rgb(0, 0, 255);</string>
               </size>
              </property>
              <property name="autoFillBackground">
-              <bool>true</bool>
+              <bool>false</bool>
              </property>
              <property name="styleSheet">
               <string notr="true">border-image: url(:/Pictures/Game/Background.png);
+background: transparent;
 color: rgb(0, 255, 0);</string>
              </property>
              <property name="text">
               <string>Sign In</string>
+             </property>
+             <property name="flat">
+              <bool>true</bool>
              </property>
             </widget>
            </item>
@@ -794,15 +815,25 @@ color: rgb(0, 255, 0);</string>
                <height>40</height>
               </size>
              </property>
+             <property name="focusPolicy">
+              <enum>Qt::StrongFocus</enum>
+             </property>
              <property name="autoFillBackground">
-              <bool>true</bool>
+              <bool>false</bool>
              </property>
              <property name="styleSheet">
               <string notr="true">border-image: url(:/Pictures/Game/Background.png);
-color: rgb(255, 85, 0);</string>
+background: transparent;
+color: rgb(255, 170, 0);</string>
              </property>
              <property name="text">
               <string>Sign Up</string>
+             </property>
+             <property name="default">
+              <bool>false</bool>
+             </property>
+             <property name="flat">
+              <bool>true</bool>
              </property>
             </widget>
            </item>
@@ -874,15 +905,18 @@ color: rgb(255, 85, 0);</string>
               <enum>Qt::LeftToRight</enum>
              </property>
              <property name="autoFillBackground">
-              <bool>true</bool>
+              <bool>false</bool>
              </property>
              <property name="styleSheet">
               <string notr="true">border-image: url(:/Pictures/Game/Background.png);
 color: rgb(0, 0, 255);
-</string>
+background: transparent;</string>
              </property>
              <property name="text">
               <string>Forgot Password?</string>
+             </property>
+             <property name="flat">
+              <bool>true</bool>
              </property>
             </widget>
            </item>
@@ -942,14 +976,18 @@ color: rgb(0, 0, 255);
           </size>
          </property>
          <property name="autoFillBackground">
-          <bool>true</bool>
+          <bool>false</bool>
          </property>
          <property name="styleSheet">
           <string notr="true">border-image: url(:/Pictures/Game/Background.png);
-color: rgb(255, 0, 0);</string>
+color: rgb(255, 0, 0);
+background: transparent;</string>
          </property>
          <property name="text">
           <string>Exit</string>
+         </property>
+         <property name="flat">
+          <bool>true</bool>
          </property>
         </widget>
        </item>
@@ -985,6 +1023,8 @@ color: rgb(255, 0, 0);</string>
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="../Resource.qrc"/>
+ </resources>
  <connections/>
 </ui>
