@@ -1,8 +1,7 @@
 #include "signup.h"
 #include "ui_signup.h"
 
-SignUp::SignUp(QWidget *parent)
-    : QDialog(parent), ui(new Ui::SignUp)
+SignUp::SignUp(QWidget *parent) : QDialog(parent), ui(new Ui::SignUp)
 {
     setWindowFlag(Qt::FramelessWindowHint);
     ui->setupUi(this);
@@ -22,11 +21,10 @@ void SignUp::on_save_clicked()
 {
     if (ui->Name->text().isEmpty() || ui->Username->text().isEmpty() || ui->Password->text().isEmpty() || ui->Phone->text().isEmpty() || ui->Address->text().isEmpty())
     {
-        QMessageBox error(QMessageBox::Critical, "Field", "Fill All the Field");
+        QMessageBox error(QMessageBox::Critical, "Field", "Fill all empty Field(s)");
         error.setWindowIcon(this->windowIcon());
-        error.setStyleSheet("font: 700 12pt \" Cascadia Mono \";color: rgb(255, 0, 0);");
+        error.setStyleSheet("font: italic 15pt \"Monotype Corsiva\";color: rgb(255, 0, 0);");
         error.exec();
-        // QMessageBox::critical(this, "Field", "Fill All the Field");
     }
     else
     {
@@ -34,17 +32,15 @@ void SignUp::on_save_clicked()
         {
             QMessageBox error(QMessageBox::Critical, "Password", "Password is short");
             error.setWindowIcon(this->windowIcon());
-            error.setStyleSheet("font: 700 12pt \" Cascadia Mono \";color: rgb(255, 0, 0);");
+            error.setStyleSheet("font: italic 15pt \"Monotype Corsiva\";color: rgb(255, 0, 0);");
             error.exec();
-            // QMessageBox::critical(this, "Password", "Password is short");
         }
         else if (ui->Phone->text().size() != 11 && ui->Phone->text().size() != 13)
         {
-            QMessageBox error(QMessageBox::Critical, "Phone", "Phone is wrong");
+            QMessageBox error(QMessageBox::Critical, "Phone", "Phone number is wrong");
             error.setWindowIcon(this->windowIcon());
-            error.setStyleSheet("font: 700 12pt \" Cascadia Mono \";color: rgb(255, 0, 0);");
+            error.setStyleSheet("font: italic 15pt \"Monotype Corsiva\";color: rgb(255, 0, 0);");
             error.exec();
-            // QMessageBox::critical(this, "Phone", "Phone is wrong");
         }
         else
         {
@@ -52,11 +48,10 @@ void SignUp::on_save_clicked()
 
             if (filesystem::exists(king.username() + ".txt"))
             {
-                QMessageBox error(QMessageBox::Critical, "Username", "Username had been taken");
+                QMessageBox error(QMessageBox::Critical, "Username", "Username had been taken by another king");
                 error.setWindowIcon(this->windowIcon());
-                error.setStyleSheet("font: 700 12pt \" Cascadia Mono \";color: rgb(255, 0, 0);");
+                error.setStyleSheet("font: italic 15pt \"Monotype Corsiva\";color: rgb(255, 0, 0);");
                 error.exec();
-                // QMessageBox::critical(this, "Username", "Username had been taken");
             }
             else
             {

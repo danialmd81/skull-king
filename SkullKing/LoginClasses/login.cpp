@@ -1,14 +1,13 @@
 #include "login.h"
 #include "ui_login.h"
 
-Login::Login(QWidget *parent)
-    : QDialog(parent), ui(new Ui::Login)
+Login::Login(QWidget *parent) : QDialog(parent), ui(new Ui::Login)
 {
     player = new QMediaPlayer;
     output = new QAudioOutput;
     player->setAudioOutput(output);
     player->setSource(QUrl("qrc:/Resource/Audio/pirate-of-caribbean.mp3"));
-    player->setLoops(-1);
+    player->setLoops(QMediaPlayer::Infinite);
     output->setVolume(30);
     player->play();
     ui->setupUi(this);
@@ -22,13 +21,18 @@ Login::~Login()
     delete signup;
 }
 
+King *Login::king_re()
+{
+    return king;
+}
+
 void Login::on_SginIn_clicked()
 {
     if (ui->username->text().isEmpty() || ui->password->text().isEmpty())
     {
-        QMessageBox error(QMessageBox::Critical, "Login", "Fields are empty");
+        QMessageBox error(QMessageBox::Critical, "Login", "Field(s) is(are) empty");
         error.setWindowIcon(this->windowIcon());
-        error.setStyleSheet("font: 700 12pt \" Cascadia Mono \";color: rgb(255, 0, 0);");
+        error.setStyleSheet("font: italic 15pt \"Monotype Corsiva\";color: rgb(255, 0, 0);");
         error.exec();
     }
     else
@@ -37,13 +41,10 @@ void Login::on_SginIn_clicked()
         file.open(ui->username->text().toStdString() + ".txt");
         if (file)
         {
-            King king;
-            file >> king;
+            king = new King(file);
             file.close();
-            if (king.password() == ui->password->text().toStdString())
+            if (king->password() == ui->password->text().toStdString())
             {
-                ui->username->clear();
-                ui->password->clear();
                 this->accept();
             }
         }
@@ -51,7 +52,7 @@ void Login::on_SginIn_clicked()
         {
             QMessageBox error(QMessageBox::Critical, "Login", "Username or Password is incorrect");
             error.setWindowIcon(this->windowIcon());
-            error.setStyleSheet("font: 700 12pt \" Cascadia Mono \";color: rgb(255, 0, 0);");
+            error.setStyleSheet("font: italic 15pt \"Monotype Corsiva\";color: rgb(255, 0, 0);");
             error.exec();
         }
     }
@@ -73,7 +74,8 @@ void Login::on_ShowPassword_stateChanged(int arg1)
 
 void Login::on_ForgotPasswprd_clicked()
 {
-    
+    forgot = new ForgotPassword(this);
+    forgot->exec();
 }
 
 void Login::on_Exit_clicked()

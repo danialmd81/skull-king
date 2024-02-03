@@ -10,6 +10,7 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    LoginClasses/forgotpassword.cpp \
     LoginClasses/login.cpp \
     LoginClasses/signup.cpp \
     MyClasses/card.cpp \
@@ -19,6 +20,7 @@ SOURCES += \
     main.cpp
 
 HEADERS += \
+    LoginClasses/forgotpassword.h \
     LoginClasses/login.h \
     LoginClasses/signup.h \
     MyClasses/card.h \
@@ -27,6 +29,7 @@ HEADERS += \
     MyClasses/my_exception.h
 
 FORMS += \
+    LoginClasses/forgotpassword.ui \
     LoginClasses/login.ui \
     LoginClasses/signup.ui
 

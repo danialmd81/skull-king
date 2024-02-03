@@ -2,7 +2,8 @@
 #define LOGIN_H
 
 #include "MyClasses/king.h"
-#include "LoginClasses/signup.h"
+#include "signup.h"
+#include "forgotpassword.h"
 #include <QMediaPlayer>
 #include <QAudioOutput>
 #include <QUrl>
@@ -20,8 +21,8 @@ class Login : public QDialog
 
 public:
     explicit Login(QWidget *parent = nullptr);
-
     ~Login();
+    King *king_re();
 
 private slots:
     void on_SginIn_clicked();
@@ -35,6 +36,8 @@ private:
     QMediaPlayer *player;
     QAudioOutput *output;
     SignUp *signup;
+    ForgotPassword *forgot;
+    King *king;
 };
 
 #endif // LOGIN_H

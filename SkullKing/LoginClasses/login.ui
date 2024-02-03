@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>893</width>
-    <height>509</height>
+    <width>839</width>
+    <height>449</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -21,9 +21,9 @@
    <string notr="true">background-image: url(:/Resource/Game/loginBG.jpg);
 border-image: url(:/Resource/Game/GameIcon.png);
 color: rgb(255, 255, 255);
-font: 14pt &quot;IranNastaliq&quot;;</string>
+font: italic 15pt &quot;Monotype Corsiva&quot;;</string>
   </property>
-  <layout class="QGridLayout" name="gridLayout_3">
+  <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0">
     <layout class="QVBoxLayout" name="verticalLayout">
      <item>
@@ -34,15 +34,15 @@ font: 14pt &quot;IranNastaliq&quot;;</string>
        <property name="sizeHint" stdset="0">
         <size>
          <width>20</width>
-         <height>40</height>
+         <height>39</height>
         </size>
        </property>
       </spacer>
      </item>
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout">
+      <layout class="QHBoxLayout" name="horizontalLayout_3">
        <item>
-        <spacer name="horizontalSpacer_12">
+        <spacer name="horizontalSpacer_8">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
          </property>
@@ -55,10 +55,10 @@ font: 14pt &quot;IranNastaliq&quot;;</string>
         </spacer>
        </item>
        <item>
-        <layout class="QFormLayout" name="formLayout_2">
+        <layout class="QFormLayout" name="formLayout">
          <item row="0" column="0">
-          <layout class="QGridLayout" name="gridLayout">
-           <item row="0" column="0">
+          <layout class="QHBoxLayout" name="horizontalLayout">
+           <item>
             <spacer name="horizontalSpacer">
              <property name="orientation">
               <enum>Qt::Horizontal</enum>
@@ -71,7 +71,7 @@ font: 14pt &quot;IranNastaliq&quot;;</string>
              </property>
             </spacer>
            </item>
-           <item row="0" column="1">
+           <item>
             <widget class="QLabel" name="label">
              <property name="minimumSize">
               <size>
@@ -97,7 +97,7 @@ background: transparent;</string>
              </property>
             </widget>
            </item>
-           <item row="0" column="2">
+           <item>
             <widget class="QLineEdit" name="username">
              <property name="minimumSize">
               <size>
@@ -118,7 +118,7 @@ background: transparent;
              </property>
             </widget>
            </item>
-           <item row="0" column="3">
+           <item>
             <spacer name="horizontalSpacer_2">
              <property name="orientation">
               <enum>Qt::Horizontal</enum>
@@ -134,8 +134,8 @@ background: transparent;
           </layout>
          </item>
          <item row="1" column="0">
-          <layout class="QGridLayout" name="gridLayout_2">
-           <item row="0" column="0">
+          <layout class="QHBoxLayout" name="horizontalLayout_2">
+           <item>
             <spacer name="horizontalSpacer_3">
              <property name="orientation">
               <enum>Qt::Horizontal</enum>
@@ -148,7 +148,7 @@ background: transparent;
              </property>
             </spacer>
            </item>
-           <item row="0" column="1">
+           <item>
             <widget class="QLabel" name="label_2">
              <property name="minimumSize">
               <size>
@@ -168,7 +168,7 @@ background: transparent;</string>
              </property>
             </widget>
            </item>
-           <item row="0" column="2">
+           <item>
             <widget class="QLineEdit" name="password">
              <property name="minimumSize">
               <size>
@@ -191,7 +191,20 @@ background: transparent;</string>
              </property>
             </widget>
            </item>
-           <item row="0" column="3">
+           <item>
+            <spacer name="horizontalSpacer_4">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
             <widget class="QCheckBox" name="ShowPassword">
              <property name="minimumSize">
               <size>
@@ -680,8 +693,52 @@ background: transparent;</string>
              </property>
             </widget>
            </item>
-           <item row="0" column="4">
-            <spacer name="horizontalSpacer_4">
+          </layout>
+         </item>
+         <item row="2" column="0">
+          <layout class="QHBoxLayout" name="horizontalLayout_4">
+           <item>
+            <spacer name="horizontalSpacer_10">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QPushButton" name="ForgotPasswprd">
+             <property name="minimumSize">
+              <size>
+               <width>200</width>
+               <height>40</height>
+              </size>
+             </property>
+             <property name="layoutDirection">
+              <enum>Qt::LeftToRight</enum>
+             </property>
+             <property name="autoFillBackground">
+              <bool>false</bool>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">border-image: url(:/Pictures/Game/Background.png);
+color: rgb(0, 0, 255);
+background: transparent;</string>
+             </property>
+             <property name="text">
+              <string>Forgot Password</string>
+             </property>
+             <property name="flat">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="horizontalSpacer_11">
              <property name="orientation">
               <enum>Qt::Horizontal</enum>
              </property>
@@ -698,7 +755,7 @@ background: transparent;</string>
         </layout>
        </item>
        <item>
-        <spacer name="horizontalSpacer_13">
+        <spacer name="horizontalSpacer_9">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
          </property>
@@ -720,15 +777,15 @@ background: transparent;</string>
        <property name="sizeHint" stdset="0">
         <size>
          <width>20</width>
-         <height>40</height>
+         <height>39</height>
         </size>
        </property>
       </spacer>
      </item>
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <layout class="QHBoxLayout" name="horizontalLayout_5">
        <item>
-        <spacer name="horizontalSpacer_14">
+        <spacer name="horizontalSpacer_5">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
          </property>
@@ -741,191 +798,77 @@ background: transparent;</string>
         </spacer>
        </item>
        <item>
-        <layout class="QFormLayout" name="formLayout">
-         <item row="0" column="0">
-          <layout class="QHBoxLayout" name="horizontalLayout_3">
-           <item>
-            <spacer name="horizontalSpacer_9">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item>
-            <spacer name="horizontalSpacer_5">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item alignment="Qt::AlignHCenter|Qt::AlignVCenter">
-            <widget class="QPushButton" name="SginIn">
-             <property name="minimumSize">
-              <size>
-               <width>200</width>
-               <height>40</height>
-              </size>
-             </property>
-             <property name="autoFillBackground">
-              <bool>false</bool>
-             </property>
-             <property name="styleSheet">
-              <string notr="true">border-image: url(:/Pictures/Game/Background.png);
+        <widget class="QPushButton" name="SginIn">
+         <property name="minimumSize">
+          <size>
+           <width>200</width>
+           <height>40</height>
+          </size>
+         </property>
+         <property name="autoFillBackground">
+          <bool>false</bool>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">border-image: url(:/Pictures/Game/Background.png);
 background: transparent;
 color: rgb(0, 255, 0);</string>
-             </property>
-             <property name="text">
-              <string>Sign In</string>
-             </property>
-             <property name="flat">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <spacer name="horizontalSpacer_6">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item alignment="Qt::AlignHCenter|Qt::AlignVCenter">
-            <widget class="QPushButton" name="SignUp">
-             <property name="minimumSize">
-              <size>
-               <width>200</width>
-               <height>40</height>
-              </size>
-             </property>
-             <property name="focusPolicy">
-              <enum>Qt::StrongFocus</enum>
-             </property>
-             <property name="autoFillBackground">
-              <bool>false</bool>
-             </property>
-             <property name="styleSheet">
-              <string notr="true">border-image: url(:/Pictures/Game/Background.png);
-background: transparent;
-color: rgb(255, 170, 0);</string>
-             </property>
-             <property name="text">
-              <string>Sign Up</string>
-             </property>
-             <property name="default">
-              <bool>false</bool>
-             </property>
-             <property name="flat">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <spacer name="horizontalSpacer_7">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item>
-            <spacer name="horizontalSpacer_8">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-          </layout>
-         </item>
-         <item row="1" column="0">
-          <layout class="QHBoxLayout" name="horizontalLayout_4">
-           <item>
-            <spacer name="horizontalSpacer_10">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item>
-            <spacer name="horizontalSpacer_11">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item alignment="Qt::AlignVCenter">
-            <widget class="QPushButton" name="ForgotPasswprd">
-             <property name="minimumSize">
-              <size>
-               <width>200</width>
-               <height>40</height>
-              </size>
-             </property>
-             <property name="layoutDirection">
-              <enum>Qt::LeftToRight</enum>
-             </property>
-             <property name="autoFillBackground">
-              <bool>false</bool>
-             </property>
-             <property name="styleSheet">
-              <string notr="true">border-image: url(:/Pictures/Game/Background.png);
-color: rgb(0, 0, 255);
-background: transparent;</string>
-             </property>
-             <property name="text">
-              <string>Forgot Password?</string>
-             </property>
-             <property name="flat">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-        </layout>
+         </property>
+         <property name="text">
+          <string>Sign In</string>
+         </property>
+         <property name="flat">
+          <bool>true</bool>
+         </property>
+        </widget>
        </item>
        <item>
-        <spacer name="horizontalSpacer_15">
+        <spacer name="horizontalSpacer_6">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeType">
+          <enum>QSizePolicy::Preferred</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <widget class="QPushButton" name="SignUp">
+         <property name="minimumSize">
+          <size>
+           <width>200</width>
+           <height>40</height>
+          </size>
+         </property>
+         <property name="focusPolicy">
+          <enum>Qt::StrongFocus</enum>
+         </property>
+         <property name="autoFillBackground">
+          <bool>false</bool>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">border-image: url(:/Pictures/Game/Background.png);
+background: transparent;
+color: rgb(255, 170, 0);</string>
+         </property>
+         <property name="text">
+          <string>Sign Up</string>
+         </property>
+         <property name="default">
+          <bool>false</bool>
+         </property>
+         <property name="flat">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="horizontalSpacer_7">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
          </property>
@@ -947,13 +890,13 @@ background: transparent;</string>
        <property name="sizeHint" stdset="0">
         <size>
          <width>20</width>
-         <height>40</height>
+         <height>38</height>
         </size>
        </property>
       </spacer>
      </item>
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_5">
+      <layout class="QHBoxLayout" name="horizontalLayout_6">
        <item>
         <spacer name="horizontalSpacer_16">
          <property name="orientation">
@@ -967,7 +910,7 @@ background: transparent;</string>
          </property>
         </spacer>
        </item>
-       <item alignment="Qt::AlignVCenter">
+       <item>
         <widget class="QPushButton" name="Exit">
          <property name="minimumSize">
           <size>
@@ -1014,7 +957,7 @@ background: transparent;</string>
        <property name="sizeHint" stdset="0">
         <size>
          <width>20</width>
-         <height>40</height>
+         <height>39</height>
         </size>
        </property>
       </spacer>

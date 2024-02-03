@@ -3,8 +3,13 @@
 
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
-    Login l;
-    l.showFullScreen();
-    return a.exec();
+    QApplication app(argc, argv);
+    Login login;
+    login.showFullScreen();
+    if (login.result() == QDialog::Accepted)
+    {
+        // open menu for king and pass king to its constructor
+    }
+
+    return app.exec();
 }
