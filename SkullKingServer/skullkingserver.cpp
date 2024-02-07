@@ -11,12 +11,12 @@ SkullKingServer::SkullKingServer(QWidget *parent) : QDialog(parent), ui(new Ui::
 SkullKingServer::~SkullKingServer()
 {
 
-    // for (auto &&i : clients)
-    // {
-    // i.first->close();
-    // i.first->deleteLater();
-    // }
-    // clients.clear();
+    for (auto &&i : clients)
+    {
+        i.first->close();
+        i.first->deleteLater();
+    }
+    clients.clear();
     server->close();
     server->deleteLater();
     delete ui;
@@ -45,32 +45,22 @@ void SkullKingServer::on_Ok_clicked()
 
 void SkullKingServer::newConnection()
 {
-    // if (clients.size() == client_number)
-    // {
-    //     server->close();
-    // }
-    // else
-    // {
-    //     while (server->hasPendingConnections())
-    //     {
-    //         ui->player_number->setText(("Player Connected to Server:" + to_string(clients.size())).c_str());
-    //         appendToSocketList(server->nextPendingConnection());
-    //     }
-    // }
+    while (server->hasPendingConnections() && clients.size() < client_number)
+    {
+        ui->player_number->setText(("Player Connected to Server:" + to_string(clients.size())).c_str());
+        appendToSocketList(server->nextPendingConnection());
+    }
 }
 
 void SkullKingServer::appendToSocketList(QTcpSocket *socket)
 {
-    // if (clients.find(socket) == clients.end())
-    // {
-    //     connect(socket, &QTcpSocket::readyRead, this, &SkullKingServer::readSocket);
-    //     connect(socket, &QTcpSocket::disconnected, this, &SkullKingServer::discardSocket);
-    //     connect(socket, &QTcpSocket::errorOccurred, this, &SkullKingServer::displayError);
-    // }
-    // else
-    // {
-    //     sendSignal(socket, "already_connected");
-    // }
+    if (clients.find(socket) == clients.end())
+    {
+        clients.insert(pair(socket, King()));
+        connect(socket, &QTcpSocket::readyRead, this, &SkullKingServer::readSocket);
+        connect(socket, &QTcpSocket::disconnected, this, &SkullKingServer::discardSocket);
+        connect(socket, &QTcpSocket::errorOccurred, this, &SkullKingServer::displayError);
+    }
 }
 
 void SkullKingServer::readSocket()
@@ -100,15 +90,17 @@ void SkullKingServer::readSocket()
         {
             file.write(buffer);
             file.close();
-            if (signal == "my_king")
+            if (signal == "king")
             {
-                // King king;
-                // king.load(fileName.toStdString());
-                // clients.insert(pair(socket, king));
-                // if (clients.size() == client_number)
-                // {
-                // start_game(socket);
-                // }
+                static int num = 0;
+                King king;
+                king.load(fileName.toStdString());
+                clients.at(socket) = king;
+                num++;
+                if (num == client_number)
+                {
+                    start_game();
+                }
             }
             else if (signal == "play_card")
             {
@@ -141,12 +133,11 @@ void SkullKingServer::readSocket()
 void SkullKingServer::discardSocket()
 {
     QTcpSocket *socket = reinterpret_cast<QTcpSocket *>(sender());
-    // auto it = clients.find(socket);
-    // if (it != clients.end())
-    // {
-    // clients.erase(it);
-    // }
-
+    auto it = clients.find(socket);
+    if (it != clients.end())
+    {
+        clients.erase(it);
+    }
     socket->deleteLater();
 }
 
@@ -231,61 +222,69 @@ void SkullKingServer::sendFile(QTcpSocket *socket, QString filePath, QString sig
         QMessageBox::critical(this, "QTCPServer", "Not connected");
 }
 
-void SkullKingServer::start_game(QTcpSocket *qts)
+void SkullKingServer::start_game()
 {
-    // Card c[clients.size()];
-    // for (int i = 0; i < clients.size(); i++)
-    // {
-    //     c[i] = deck.set_starter();
-    // }
-    // int x = 0;
-    // for (auto &&i : clients)
-    // {
-    //     ofstream file;
-    //     file.open("start.txt", ios::out | ios::trunc);
-    //     for (int j = 0, l = x; j < clients.size(); j++, l++)
-    //     {
-    //         if (l == clients.size())
-    //         {
-    //             l = 0;
-    //         }
-    //         file << c[l];
-    //     }
-    //     for (auto &&k : clients)
-    //     {
-    //         if (k.first != i.first)
-    //         {
-    //             file << k.second.name();
-    //         }
-    //     }
-    //     file.close();
-    //     sendFile(i.first, "start.txt", "start_game");
-    //     x++;
-    // }
-    // deck.reset();
+    for (auto &&i : clients)
+    {
+        for (auto &&j : clients)
+        {
+            if (j != i)
+                sendFile(j.first, j.second.filePath().c_str(), "oppnent_king");
+        }
+    }
+    Card starter_card[clients.size()];
+    for (int i = 0; i < clients.size(); i++)
+    {
+        starter_card[i] = deck.set_starter();
+    }
+    int x = 0;
+    for (auto &&i : clients)
+    {
+        ofstream file;
+        file.open("start.txt", ios::out | ios::trunc);
+        for (int j = 0, l = x; j < clients.size(); j++, l++)
+        {
+            if (l == clients.size())
+            {
+                l = 0;
+            }
+            file << starter_card[l];
+        }
+        for (auto &&k : clients)
+        {
+            if (k.first != i.first)
+            {
+                file << k.second.name();
+            }
+        }
+        file.close();
+        sendFile(i.first, "start.txt", "start_game");
+        x++;
+    }
+    deck.reset();
 }
 
-void SkullKingServer::start_round(QTcpSocket *qts, int r)
-{
-    // auto it = clients.find(qts);
-    // it->second.load();
-    // for (int i = 0; i < 2 * r; i++)
-    // {
-    //     it->second.hand().push_back(deck.random());
-    // }
-    // it->second.save();
-    // sendFile(it->first, it->second.filePath().c_str(), "start_round");
-    // deck.reset();
-}
+// void SkullKingServer::start_round(QTcpSocket *qts, int r)
+// {
+// auto it = clients.find(qts);
+// it->second.load();
+// for (int i = 0; i < 2 * r; i++)
+// {
+//     it->second.hand().push_back(deck.random());
+// }
+// it->second.save();
+// sendFile(it->first, it->second.filePath().c_str(), "start_round");
+// deck.reset();
+// }
 
-void SkullKingServer::play_card(QTcpSocket *qts)
-{
-    // auto it = clients.find(qts);
-    // for (auto &&i : clients)
-    // {
-    //     if (i.first != it->first)
-    //     {
-    //         sendFile(i.first, "card.txt", "play_card");
-    //     }
-    // }
-}
+// void SkullKingServer::play_card(QTcpSocket *qts)
+// {
+// auto it = clients.find(qts);
+// for (auto &&i : clients)
+// {
+//     if (i.first != it->first)
+//     {
+//         sendFile(i.first, "card.txt", "play_card");
+//     }
+// }
+// }

@@ -21,6 +21,20 @@ Game::Game(King *king, QWidget *parent) : QDialog(parent), ui(new Ui::Game)
     connect(ui->Card12, &QPushButton::clicked, this, &Game::card_clicked);
     connect(ui->Card13, &QPushButton::clicked, this, &Game::card_clicked);
     connect(ui->Card14, &QPushButton::clicked, this, &Game::card_clicked);
+    ui->Card1->hide();
+    ui->Card2->hide();
+    ui->Card3->hide();
+    ui->Card4->hide();
+    ui->Card5->hide();
+    ui->Card6->hide();
+    ui->Card7->hide();
+    ui->Card8->hide();
+    ui->Card9->hide();
+    ui->Card10->hide();
+    ui->Card11->hide();
+    ui->Card12->hide();
+    ui->Card13->hide();
+    ui->Card14->hide();
     ui->BackCard_1->hide();
     ui->BackCard_2->hide();
     ui->BackCard_3->hide();
@@ -39,8 +53,26 @@ Game::Game(King *king, QWidget *parent) : QDialog(parent), ui(new Ui::Game)
     ui->OpponentCard->hide();
     this->showFullScreen();
     client = new Client(this);
+    connect(client, &Client::connected_to_server, this, &Game::connected_to_server);
     connect(client, &Client::start_game, this, &Game::GameStart);
+    connect(client, &Client::oppnent_king, this, &Game::oppnent_king);
     client->exec();
+}
+
+void Game::connected_to_server()
+{
+    client->sendFile(king->filePath().c_str(), "king");
+}
+
+void Game::oppnent_king(string filepath) // for more than 2 players u need to change this function.
+{
+    opponent_king = new King;
+    opponent_king->load(filepath); // should check if filepath is correct or not.
+    ui->OpponentName->setText(opponent_king->name().c_str());
+}
+
+void Game::GameStart()
+{
 }
 
 void Game::card_clicked()
@@ -162,11 +194,11 @@ void Game::card_clicked()
     // }
 }
 
-void Game::GameStart()
-{
-}
-
 Game::~Game()
 {
     delete ui;
+}
+
+void Game::on_Stop_clicked()
+{
 }

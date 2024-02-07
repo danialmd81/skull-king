@@ -30,7 +30,8 @@ public:
 signals:
     void newSignal(QString);
     void cancel(std::string);
-    void king_of_client(QString);
+    void connected_to_server();
+    void oppnent_king(std::string filepath);
     void other_king_of_client(QString);
     void kings_ready();
 

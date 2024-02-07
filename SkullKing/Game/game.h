@@ -24,9 +24,13 @@ private slots:
     void card_clicked();
     void GameStart();
 
+    void on_Stop_clicked();
+    void connected_to_server();
+    void oppnent_king(std::string filepath);
+
 private:
     Ui::Game *ui;
-    King *king;
+    King *king, *opponent_king;
     Client *client;
     unordered_map<QPushButton *, Card *> king_cards;
     unordered_map<QPushButton *, Card *>::iterator card;

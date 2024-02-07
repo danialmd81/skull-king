@@ -9,10 +9,18 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    MyClasses/card.cpp \
+    MyClasses/deck.cpp \
+    MyClasses/king.cpp \
+    MyClasses/my_exception.cpp \
     main.cpp \
     skullkingserver.cpp
 
 HEADERS += \
+    MyClasses/card.h \
+    MyClasses/deck.h \
+    MyClasses/king.h \
+    MyClasses/my_exception.h \
     skullkingserver.h
 
 FORMS += \

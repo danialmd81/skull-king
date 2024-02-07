@@ -4,7 +4,6 @@
 #include <QDialog>
 #include <QDebug>
 #include <QMessageBox>
-#include <QSet>
 #include <QTcpServer>
 #include <QTcpSocket>
 #include <QFile>
@@ -13,6 +12,8 @@
 #include <fstream>
 #include <iostream>
 #include <map>
+#include "MyClasses/king.h"
+#include "MyClasses/deck.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui
@@ -41,7 +42,7 @@ private slots:
     void sendSignal(QTcpSocket *socket, QString signal);
     void sendFile(QTcpSocket *socket, QString filePath, QString signal);
 
-    void start_game(QTcpSocket *qts);
+    void start_game();
     void start_round(QTcpSocket *qts, int r);
     void play_card(QTcpSocket *qts);
 
@@ -50,7 +51,7 @@ private:
     QTcpServer *server;
     QTcpSocket *socket;
     int client_number;
-    // unordered_map<QTcpSocket *, King> clients;
-    // Deck deck;
+    unordered_map<QTcpSocket *, King> clients;
+    Deck deck;
 };
 #endif // SKULLKINGSERVER_H

@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1126</width>
+    <width>1160</width>
     <height>647</height>
    </rect>
   </property>
@@ -252,7 +252,7 @@ color: rgb(255, 255, 255);
 background: transparent;</string>
        </property>
        <property name="text">
-        <string>Stop</string>
+        <string>Pause</string>
        </property>
       </widget>
      </item>

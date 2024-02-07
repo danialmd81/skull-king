@@ -17,7 +17,7 @@ Client::~Client()
     delete socket;
     delete ui;
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void Client::on_Connect_clicked()
 {
     if (ui->Ip->text().isEmpty() || ui->Port->text().isEmpty())
@@ -31,9 +31,10 @@ void Client::on_Connect_clicked()
         socket->connectToHost(QHostAddress::LocalHost, 56000);
         if (socket->waitForConnected(3000))
         {
-            QMessageBox::information(this, "Connected", "Connect");
+            QMessageBox::information(this, "Connected", "Connected to Server");
             ui->Status->setText("Waiting for Opponent(s) Connection to Server...");
             ui->Connect->hide();
+            emit connected_to_server();
         }
         else
         {
@@ -69,7 +70,11 @@ void Client::readSocket()
         {
             file.write(buffer);
             file.close();
-            if (signal == "start_game")
+            if (signal == "oppnent_king")
+            {
+                emit oppnent_king(filePath.toStdString());
+            }
+            else if (signal == "start_game")
             {
                 this->hide();
                 emit start_game();
@@ -94,6 +99,7 @@ void Client::readSocket()
         }
     }
 }
+
 void Client::discardSocket()
 {
     socket->deleteLater();

@@ -25,6 +25,9 @@
 font: italic 32pt &quot;Monotype Corsiva&quot;;
 border-image: url(:/Resorce/serverclientBG.jpg);</string>
   </property>
+  <property name="locale">
+   <locale language="English" country="UnitedStates"/>
+  </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0">
     <layout class="QHBoxLayout" name="horizontalLayout_2">
@@ -118,6 +121,9 @@ color: rgb(219, 182, 49);
         <string notr="true">color: rgb(219, 182, 49);
 border-image: none;
 background: transparent;</string>
+       </property>
+       <property name="locale">
+        <locale language="English" country="UnitedStates"/>
        </property>
        <property name="minimum">
         <number>2</number>
