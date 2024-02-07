@@ -53,14 +53,11 @@
         <file>Resource/Game/cursor.png</file>
         <file>Resource/Game/GameIcon.png</file>
         <file>Resource/Game/GameName.png</file>
-        <file>Resource/Game/GameName1.png</file>
-        <file>Resource/Game/green-grunge-texture-background_1409-1374 (1).avif</file>
         <file>Resource/Game/loginBG.jpg</file>
         <file>Resource/Game/logoutBG.jpg</file>
         <file>Resource/Game/menuBG.jpg</file>
         <file>Resource/Game/numbers.png</file>
         <file>Resource/Game/score.png</file>
-        <file>Resource/Game/serverclientBG.jpg</file>
         <file>Resource/Game/skull-with-flower-design-it.jpg</file>
         <file>Resource/Game/SkullMark.png</file>
         <file>Resource/Game/startgameBG.jpg</file>
@@ -71,10 +68,10 @@
         <file>Resource/Icons/gamepad-solid.svg</file>
         <file>Resource/Icons/key-solid.svg</file>
         <file>Resource/Icons/play-solid.svg</file>
-        <file>Resource/Icons/server-solid.svg</file>
         <file>Resource/Icons/stop-solid.svg</file>
         <file>Resource/Icons/tower-broadcast-solid.svg</file>
         <file>Resource/Icons/user-plus-solid.svg</file>
         <file>Resource/Icons/user-solid.svg</file>
+        <file>Resource/Cards/backskin.png</file>
     </qresource>
 </RCC>
