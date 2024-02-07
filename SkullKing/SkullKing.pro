@@ -10,9 +10,12 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    Game/client.cpp \
+    Game/game.cpp \
     LoginClasses/forgotpassword.cpp \
     LoginClasses/login.cpp \
     LoginClasses/signup.cpp \
+    Menu/menu.cpp \
     MyClasses/card.cpp \
     MyClasses/deck.cpp \
     MyClasses/king.cpp \
@@ -20,18 +23,24 @@ SOURCES += \
     main.cpp
 
 HEADERS += \
+    Game/client.h \
+    Game/game.h \
     LoginClasses/forgotpassword.h \
     LoginClasses/login.h \
     LoginClasses/signup.h \
+    Menu/menu.h \
     MyClasses/card.h \
     MyClasses/deck.h \
     MyClasses/king.h \
     MyClasses/my_exception.h
 
 FORMS += \
+    Game/client.ui \
+    Game/game.ui \
     LoginClasses/forgotpassword.ui \
     LoginClasses/login.ui \
-    LoginClasses/signup.ui
+    LoginClasses/signup.ui \
+    Menu/menu.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
