@@ -2,6 +2,7 @@
 #define LOGIN_H
 
 #include "MyClasses/king.h"
+#include "Menu/menu.h"
 #include "signup.h"
 #include "forgotpassword.h"
 #include <QMediaPlayer>
@@ -22,7 +23,6 @@ class Login : public QDialog
 public:
     explicit Login(QWidget *parent = nullptr);
     ~Login();
-    King *king_re();
 
 private slots:
     void on_SginIn_clicked();
@@ -30,6 +30,7 @@ private slots:
     void on_ShowPassword_stateChanged(int arg1);
     void on_ForgotPasswprd_clicked();
     void on_Exit_clicked();
+    void menu_Slot();
 
 private:
     Ui::Login *ui;
@@ -38,6 +39,7 @@ private:
     SignUp *signup;
     ForgotPassword *forgot;
     King *king;
+    Menu *menu;
 };
 
 #endif // LOGIN_H

@@ -18,12 +18,6 @@ Login::~Login()
     delete ui;
     delete player;
     delete output;
-    delete signup;
-}
-
-King *Login::king_re()
-{
-    return king;
 }
 
 void Login::on_SginIn_clicked()
@@ -45,7 +39,11 @@ void Login::on_SginIn_clicked()
             file.close();
             if (king->password() == ui->password->text().toStdString())
             {
-                this->accept();
+                this->hide();
+                menu = new Menu(king);
+                menu->setModal(true);
+                menu->showFullScreen();
+                connect(menu, &QDialog::accepted, this, &menu_Slot);
             }
         }
         else
@@ -56,6 +54,12 @@ void Login::on_SginIn_clicked()
             error.exec();
         }
     }
+}
+
+void Login::menu_Slot()
+{
+    this->showFullScreen();
+    delete menu;
 }
 
 void Login::on_SignUp_clicked()
@@ -80,5 +84,5 @@ void Login::on_ForgotPasswprd_clicked()
 
 void Login::on_Exit_clicked()
 {
-    this->reject();
+    this->done(QDialog::Rejected);
 }

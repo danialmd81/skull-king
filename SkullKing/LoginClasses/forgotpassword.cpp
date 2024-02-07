@@ -36,7 +36,7 @@ void ForgotPassword::on_Enter_clicked()
             {
                 king.password() = ui->NewPassword->text().toStdString();
                 king.save();
-                this->accept();
+                this->done(QDialog::Accepted);
             }
             else
             {
@@ -59,5 +59,5 @@ void ForgotPassword::on_Enter_clicked()
 
 void ForgotPassword::on_Cancel_clicked()
 {
-    this->reject();
+    this->done(QDialog::Rejected);
 }

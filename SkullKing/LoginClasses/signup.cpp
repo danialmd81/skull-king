@@ -14,7 +14,7 @@ SignUp::~SignUp()
 
 void SignUp::on_cancel_clicked()
 {
-    this->reject();
+    this->done(QDialog::Rejected);
 }
 
 void SignUp::on_save_clicked()
@@ -56,7 +56,7 @@ void SignUp::on_save_clicked()
             else
             {
                 king.save();
-                this->accept();
+                this->done(QDialog::Accepted);
             }
         }
     }
