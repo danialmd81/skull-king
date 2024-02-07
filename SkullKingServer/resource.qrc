@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>Resorce/serverclientBG.jpg</file>
+        <file>Resorce/server-solid.svg</file>
+    </qresource>
+</RCC>
