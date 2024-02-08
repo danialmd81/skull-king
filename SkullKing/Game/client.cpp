@@ -70,14 +70,10 @@ void Client::readSocket()
         {
             file.write(buffer);
             file.close();
-            if (signal == "oppnent_king")
-            {
-                emit oppnent_king(filePath.toStdString());
-            }
-            else if (signal == "start_game")
+            if (signal == "start_game")
             {
                 this->hide();
-                emit start_game();
+                emit start_game(filePath.toStdString());
             }
             else if (signal == "start_round")
             {

@@ -6,6 +6,7 @@
 #include "Game/client.h"
 #include <QDialog>
 #include <unordered_map>
+#include <QDebug>
 
 namespace Ui
 {
@@ -22,15 +23,16 @@ public:
 
 private slots:
     void card_clicked();
-    void GameStart();
-
     void on_Stop_clicked();
     void connected_to_server();
-    void oppnent_king(std::string filepath);
+    void GameStart(std::string filepath);
+    void StartRound();
 
 private:
     Ui::Game *ui;
     King *king, *opponent_king;
+    bool turn;
+    int round;
     Client *client;
     unordered_map<QPushButton *, Card *> king_cards;
     unordered_map<QPushButton *, Card *>::iterator card;

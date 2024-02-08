@@ -31,11 +31,10 @@ signals:
     void newSignal(QString);
     void cancel(std::string);
     void connected_to_server();
-    void oppnent_king(std::string filepath);
     void other_king_of_client(QString);
     void kings_ready();
 
-    void start_game();
+    void start_game(std::string filepath);
     void start_round();
     void play_card();
     void end_game();
