@@ -6,6 +6,10 @@ using namespace std;
 SkullKingServer::SkullKingServer(QWidget *parent) : QDialog(parent), ui(new Ui::SkullKingServer)
 {
     ui->setupUi(this);
+    ui->Ip->hide();
+    ui->Port->hide();
+    ui->label_3->hide();
+    ui->label->hide();
 }
 
 SkullKingServer::~SkullKingServer()
@@ -26,6 +30,10 @@ void SkullKingServer::on_Ok_clicked()
 {
     client_number = ui->number_of_players->value();
     ui->Ok->hide();
+    ui->Ip->show();
+    ui->Port->show();
+    ui->label_3->show();
+    ui->label->show();
     ui->player_number->setText("Player Connected to Server:0");
     ui->number_of_players->hide();
     server = new QTcpServer();
@@ -47,7 +55,6 @@ void SkullKingServer::newConnection()
 {
     while (server->hasPendingConnections() && clients.size() < client_number)
     {
-        ui->player_number->setText(("Player Connected to Server:" + to_string(clients.size())).c_str());
         appendToSocketList(server->nextPendingConnection());
     }
 }
@@ -57,6 +64,7 @@ void SkullKingServer::appendToSocketList(QTcpSocket *socket)
     if (clients.find(socket) == clients.end())
     {
         clients.insert(pair(socket, King()));
+        ui->player_number->setText(("Player Connected to Server:" + to_string(clients.size())).c_str());
         connect(socket, &QTcpSocket::readyRead, this, &SkullKingServer::readSocket);
         connect(socket, &QTcpSocket::disconnected, this, &SkullKingServer::discardSocket);
         connect(socket, &QTcpSocket::errorOccurred, this, &SkullKingServer::displayError);
@@ -99,12 +107,13 @@ void SkullKingServer::readSocket()
                 num++;
                 if (num == client_number)
                 {
+                    this->hide();
                     start_game();
                 }
             }
             else if (signal == "play_card")
             {
-                play_card(socket);
+                // play_card(socket);
             }
             else if (signal == "round_ended")
             {
@@ -125,7 +134,7 @@ void SkullKingServer::readSocket()
         QString signal(buffer.toStdString().c_str());
         if (signal == "start_game_ended")
         {
-            start_round(socket, 1);
+            start_round(1);
         }
     }
 }
@@ -224,58 +233,36 @@ void SkullKingServer::sendFile(QTcpSocket *socket, QString filePath, QString sig
 
 void SkullKingServer::start_game()
 {
+    Card starter_cards[clients.size()];
+    ofstream file;
+    file.open("start.txt", ios::out | ios::trunc);
     for (auto &&i : clients)
     {
-        for (auto &&j : clients)
-        {
-            if (j != i)
-                sendFile(j.first, j.second.filePath().c_str(), "oppnent_king");
-        }
+        i.second.starter_card() = deck.set_starter();
+        file << i.second.username() << " " << i.second.starter_card() << " ";
     }
-    Card starter_card[clients.size()];
-    for (int i = 0; i < clients.size(); i++)
-    {
-        starter_card[i] = deck.set_starter();
-    }
-    int x = 0;
+    file << "end.";
+    file.close();
     for (auto &&i : clients)
     {
-        ofstream file;
-        file.open("start.txt", ios::out | ios::trunc);
-        for (int j = 0, l = x; j < clients.size(); j++, l++)
-        {
-            if (l == clients.size())
-            {
-                l = 0;
-            }
-            file << starter_card[l];
-        }
-        for (auto &&k : clients)
-        {
-            if (k.first != i.first)
-            {
-                file << k.second.name();
-            }
-        }
-        file.close();
         sendFile(i.first, "start.txt", "start_game");
-        x++;
     }
     deck.reset();
 }
 
-// void SkullKingServer::start_round(QTcpSocket *qts, int r)
-// {
-// auto it = clients.find(qts);
-// it->second.load();
-// for (int i = 0; i < 2 * r; i++)
-// {
-//     it->second.hand().push_back(deck.random());
-// }
-// it->second.save();
-// sendFile(it->first, it->second.filePath().c_str(), "start_round");
-// deck.reset();
-// }
+void SkullKingServer::start_round(int r)
+{
+    for (auto &&king : clients)
+    {
+        for (int i = 0; i < 2 * r; i++)
+        {
+            king.second.hand().push_back(deck.random());
+        }
+        king.second.save();
+        sendFile(king.first, king.second.filePath().c_str(), "start_round");
+    }
+    deck.reset();
+}
 
 // void SkullKingServer::play_card(QTcpSocket *qts)
 // {

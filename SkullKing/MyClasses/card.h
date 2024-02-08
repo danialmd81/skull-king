@@ -4,8 +4,7 @@
 #include "my_exception.h"
 #include <fstream>
 #include <iostream>
-
-using namespace std;
+#include <vector>
 
 enum Cards
 {
@@ -19,7 +18,7 @@ enum Cards
 };
 
 Cards from_int_to_Cards(int n);
-string from_Cards_to_string(Cards cards);
+std::string from_Cards_to_string(Cards cards);
 class Card
 {
 private:
@@ -30,6 +29,7 @@ private:
 public:
   Card();
   Card(Cards name, int number);
+  std::string filepath();
   bool operator<(const Card card) const;
   bool operator==(const Card &card);
   friend ostream &operator<<(ostream &out, Card &card);

@@ -12,7 +12,6 @@ King::King(string n, string u, string pa, string ph, string a)
     k_phone = ph;
     k_address = a;
     k_coin = 1000;
-    k_turn = 0;
     k_score = 0;
     k_victory = 0;
     k_failure = 0;
@@ -73,9 +72,9 @@ int &King::failure()
     return k_failure;
 }
 
-bool &King::turn()
+Card &King::starter_card()
 {
-    return k_turn;
+    return k_starter_card;
 }
 
 vector<Card> &King::hand()
@@ -85,9 +84,9 @@ vector<Card> &King::hand()
 
 ostream &operator<<(ostream &out, King &king)
 {
-    out << "King: " << king.k_name << ' ' << king.k_username << ' ' << king.k_password << ' ' << king.k_phone << ' '
-        << king.k_address << ' ' << king.k_coin << ' ' << king.k_turn << ' ' << king.k_score << ' ' << king.k_victory
-        << ' ' << king.k_failure << ' ' << king.k_hand.size() << ' ';
+    out << "King: " << king.k_name << ' ' << king.k_username << ' ' << king.k_password << ' '
+        << king.k_phone << ' ' << king.k_address << ' ' << king.k_coin << ' ' << king.k_score << ' '
+        << king.k_victory << ' ' << king.k_failure << ' ' << king.k_hand.size() << ' ';
     for (auto &&i : king.k_hand)
     {
         out << i;
@@ -106,8 +105,8 @@ istream &operator>>(istream &in, King &king)
     {
         if (s_reader == "King:")
         {
-            in >> king.k_name >> king.k_username >> king.k_password >> king.k_phone >> king.k_address >> king.k_coin >>
-                king.k_turn >> king.k_score >> king.k_victory >> king.k_failure >> i_reader;
+            in >> king.k_name >> king.k_username >> king.k_password >> king.k_phone >> king.k_address >>
+                king.k_coin >> king.k_score >> king.k_victory >> king.k_failure >> i_reader;
             for (int i = 0; i < i_reader; i++)
             {
                 Card card;

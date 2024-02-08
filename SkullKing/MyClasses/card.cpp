@@ -1,5 +1,7 @@
 #include "card.h"
 
+using namespace std;
+
 Card::Card()
 {
 }
@@ -16,6 +18,11 @@ Card::Card(Cards name, int number)
     {
         Number = 0;
     }
+}
+
+string Card::filepath()
+{
+    return from_Cards_to_string(this->Name) + to_string(Number) + ".png";
 }
 
 void Card::save()
@@ -378,6 +385,7 @@ ostream &operator<<(ostream &out, Card &card)
     out << card.Name << ' ' << card.Number << ' ' << card.deleted << ' ';
     return out;
 }
+
 istream &operator>>(istream &in, Card &card)
 {
     int cards;

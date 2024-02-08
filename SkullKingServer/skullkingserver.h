@@ -43,8 +43,8 @@ private slots:
     void sendFile(QTcpSocket *socket, QString filePath, QString signal);
 
     void start_game();
-    void start_round(QTcpSocket *qts, int r);
-    void play_card(QTcpSocket *qts);
+    void start_round(int r);
+    // void play_card(QTcpSocket *qts);
 
 private:
     Ui::SkullKingServer *ui;
