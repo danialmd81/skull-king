@@ -185,7 +185,6 @@ void King::load()
         }
         else
         {
-            file.close();
             __throw_ios_failure("there is no file with this path");
         }
     }

@@ -4,7 +4,7 @@
 Game::Game(King *king, QWidget *parent) : QDialog(parent), ui(new Ui::Game)
 {
     turn = false;
-    this->king = king;
+    this->king = new King(*king);
     ui->setupUi(this);
     // this->setCursor(QCursor(QPixmap(":/Resource/Game/cursor.png")));
     ui->KingName->setText(king->username().c_str());
@@ -53,13 +53,14 @@ Game::Game(King *king, QWidget *parent) : QDialog(parent), ui(new Ui::Game)
     ui->KingCard->hide();
     ui->OpponentCard->hide();
     this->showFullScreen();
-    client = new Client(this);
-    connect(client, &Client::connected_to_server, this, &Game::connected_to_server);
-    connect(client, &Client::start_game, this, &Game::GameStart);
-    connect(client, &Client::start_round, this, &Game::StartRound);
-    client->show();
-    client->setModal(true);
+    // client = new Client(this);
+    // connect(client, &Client::connected_to_server, this, &Game::connected_to_server);
+    // connect(client, &Client::start_game, this, &Game::GameStart);
+    // connect(client, &Client::start_round, this, &Game::StartRound);
+    // client->show();
+    // client->setModal(true);
     // GameStart("start.txt");
+    StartRound();
 }
 
 void Game::connected_to_server()
@@ -109,7 +110,9 @@ void Game::GameStart(string filepath) // for more than 2 players u need to chang
 
 void Game::StartRound()
 {
-    king->load();
+    // king->load();
+    ui->KingCard->hide();
+    ui->OpponentCard->hide();
     int round = king->hand().size() / 2;
     for (auto &&i : king->hand())
     {
@@ -125,8 +128,10 @@ void Game::StartRound()
         ui->Card2->show();
         ui->BackCard_1->show();
         ui->BackCard_2->show();
-        ui->Card1->setStyleSheet((king->hand().at(0).filepath() + ");").c_str());
-        ui->Card2->setStyleSheet((king->hand().at(1).filepath() + ");").c_str());
+        ui->Card1->setStyleSheet((styleSheet_str + king->hand().at(0).filepath() + ");").c_str());
+        ui->Card2->setStyleSheet((styleSheet_str + king->hand().at(1).filepath() + ");").c_str());
+        king_cards.insert(pair(ui->Card1, &king->hand().at(0)));
+        king_cards.insert(pair(ui->Card2, &king->hand().at(1)));
     }
     // else if (round == 2)
     // {
@@ -462,121 +467,123 @@ void Game::StartRound()
 
 void Game::card_clicked()
 {
-    // QPushButton *selected_card = reinterpret_cast<QPushButton *>(sender());
-    // card = king_cards.find(selected_card);
+    string styleSheet_str("border-image: url(:/Resource/Cards/");
+    QPushButton *selected_card = reinterpret_cast<QPushButton *>(sender());
+    card = king_cards.find(selected_card);
+    // turn = true;
+    if (turn)
+    {
+        if (ui->KingCard->isHidden() && ui->OpponentCard->isHidden()) // for first hand play
+        {
+            ui->KingCard->show();
+            ui->KingCard->setStyleSheet((styleSheet_str + card->second->filepath() + ");").c_str());
+            selected_card->hide();
+            card->second->delete_it();
+            card->second->save();
+            turn = false;
+            client->sendFile("card.txt", "play_card");
+        }
 
-    // if (king->turn())
-    // {
-    //     if (ui->CardLabel1->pixmap().isNull() && ui->CardLabel2->pixmap().isNull()) // for first player
-    //     {
-    //         ui->CardLabel1->setPixmap(button->second->pixmap());
-    //         selected_card->hide();
-    //         button->second->delete_it();
-    //         button->second->save();
-    //         king->turn() = false;
-    //         client->sendFile("card.txt", "play_card");
-    //     }
+        // else if (ui->CardLabel1->pixmap().isNull() && !ui->CardLabel2->pixmap().isNull()) // for second player
+        // {
+        //     if (button->second->compare(ground) == -1)
+        //     {
+        //         ui->CardLabel1->setPixmap(button->second->pixmap());
+        //         button->first->hide();
+        //         button->second->delete_it();
+        //         button->second->save();
+        //         king->turn() = false;
+        //         QMessageBox::information(this, "Loose a Hand", "You Loosed this Hand");
+        //         client->sendFile("card.txt", "play_card");
+        //     }
+        //     else if (button->second->compare(ground) == 0)
+        //     {
+        //         auto it = std::find(king->hand().begin(), king->hand().end(), ground);
+        //         if (it != king->hand().end())
+        //         {
+        //             if (!it->is_deleted())
+        //             {
+        //                 QMessageBox::critical(this, "Wrong Choose", "Choose Wisly");
+        //                 return;
+        //             }
+        //             else
+        //             {
+        //                 ui->CardLabel1->setPixmap(button->second->pixmap());
+        //                 button->first->hide();
+        //                 button->second->delete_it();
+        //                 button->second->save();
+        //                 king->turn() = false;
+        //                 QMessageBox::information(this, "Loose a Hand", "You Loosed this Hand");
+        //                 client->sendFile("card.txt", "play_card");
+        //             }
+        //         }
+        //         else
+        //         {
+        //             ui->CardLabel1->setPixmap(button->second->pixmap());
+        //             button->first->hide();
+        //             button->second->delete_it();
+        //             button->second->save();
+        //             king->turn() = false;
+        //             QMessageBox::information(this, "Loose a Hand", "You Loosed this Hand");
+        //             client->sendFile("card.txt", "play_card");
+        //         }
+        //     }
 
-    //     else if (ui->CardLabel1->pixmap().isNull() && !ui->CardLabel2->pixmap().isNull()) // for second player
-    //     {
-    //         if (button->second->compare(ground) == -1)
-    //         {
-    //             ui->CardLabel1->setPixmap(button->second->pixmap());
-    //             button->first->hide();
-    //             button->second->delete_it();
-    //             button->second->save();
-    //             king->turn() = false;
-    //             QMessageBox::information(this, "Loose a Hand", "You Loosed this Hand");
-    //             client->sendFile("card.txt", "play_card");
-    //         }
-    //         else if (button->second->compare(ground) == 0)
-    //         {
-    //             auto it = std::find(king->hand().begin(), king->hand().end(), ground);
-    //             if (it != king->hand().end())
-    //             {
-    //                 if (!it->is_deleted())
-    //                 {
-    //                     QMessageBox::critical(this, "Wrong Choose", "Choose Wisly");
-    //                     return;
-    //                 }
-    //                 else
-    //                 {
-    //                     ui->CardLabel1->setPixmap(button->second->pixmap());
-    //                     button->first->hide();
-    //                     button->second->delete_it();
-    //                     button->second->save();
-    //                     king->turn() = false;
-    //                     QMessageBox::information(this, "Loose a Hand", "You Loosed this Hand");
-    //                     client->sendFile("card.txt", "play_card");
-    //                 }
-    //             }
-    //             else
-    //             {
-    //                 ui->CardLabel1->setPixmap(button->second->pixmap());
-    //                 button->first->hide();
-    //                 button->second->delete_it();
-    //                 button->second->save();
-    //                 king->turn() = false;
-    //                 QMessageBox::information(this, "Loose a Hand", "You Loosed this Hand");
-    //                 client->sendFile("card.txt", "play_card");
-    //             }
-    //         }
+        //     else if (button->second->compare(ground) == 1)
+        //     {
+        //         ui->CardLabel1->setPixmap(button->second->pixmap());
+        //         button->first->hide();
+        //         button->second->delete_it();
+        //         button->second->save();
+        //         winning_card++;
+        //         king->turn() = false;
+        //         QMessageBox::information(this, "Win a Hand", "You Won this Hand");
+        //         client->sendFile("card.txt", "play_card");
+        //     }
 
-    //         else if (button->second->compare(ground) == 1)
-    //         {
-    //             ui->CardLabel1->setPixmap(button->second->pixmap());
-    //             button->first->hide();
-    //             button->second->delete_it();
-    //             button->second->save();
-    //             winning_card++;
-    //             king->turn() = false;
-    //             QMessageBox::information(this, "Win a Hand", "You Won this Hand");
-    //             client->sendFile("card.txt", "play_card");
-    //         }
+        //     else if (button->second->compare(ground) == 2)
+        //     {
+        //         ui->CardLabel1->setPixmap(button->second->pixmap());
+        //         button->first->hide();
+        //         button->second->delete_it();
+        //         button->second->save();
+        //         king->turn() = false;
+        //         QMessageBox::information(this, "Loose a Hand", "You Loosed this Hand");
+        //         client->sendFile("card.txt", "play_card");
+        //     }
 
-    //         else if (button->second->compare(ground) == 2)
-    //         {
-    //             ui->CardLabel1->setPixmap(button->second->pixmap());
-    //             button->first->hide();
-    //             button->second->delete_it();
-    //             button->second->save();
-    //             king->turn() = false;
-    //             QMessageBox::information(this, "Loose a Hand", "You Loosed this Hand");
-    //             client->sendFile("card.txt", "play_card");
-    //         }
+        //     else
+        //     {
+        //         QMessageBox::critical(this, "Wrong Choose", "Choose Wisly");
+        //         return;
+        //     }
 
-    //         else
-    //         {
-    //             QMessageBox::critical(this, "Wrong Choose", "Choose Wisly");
-    //             return;
-    //         }
+        //     ui->CardLabel1->clear();
+        //     ui->CardLabel2->clear();
 
-    //         ui->CardLabel1->clear();
-    //         ui->CardLabel2->clear();
+        //     if (king->hand_is_empty())
+        //     {
+        //         king_cards.clear();
+        //         king->hand().clear();
 
-    //         if (king->hand_is_empty())
-    //         {
-    //             king_cards.clear();
-    //             king->hand().clear();
+        //         ofstream file;
+        //         file.open("round.txt", ios::out | ios::trunc);
+        //         file << round;
+        //         file.close();
+        //         round++;
 
-    //             ofstream file;
-    //             file.open("round.txt", ios::out | ios::trunc);
-    //             file << round;
-    //             file.close();
-    //             round++;
+        //         // proces score here
 
-    //             // proces score here
+        //         QTest::qWait(500);
+        //         client->sendFile("round.txt", "round_ended");
+        //     }
+        // }
+    }
 
-    //             QTest::qWait(500);
-    //             client->sendFile("round.txt", "round_ended");
-    //         }
-    //     }
-    // }
-
-    // else
-    // {
-    //     QMessageBox::critical(this, "Turn", "It is not your turn");
-    // }
+    else
+    {
+        QMessageBox::critical(this, "Turn", "It is not your turn");
+    }
 }
 
 Game::~Game()
