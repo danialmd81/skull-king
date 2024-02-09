@@ -1,12 +1,10 @@
 #ifndef CLIENT_H
 #define CLIENT_H
 
-#include <QDebug>
 #include <QFile>
 #include <QFileInfo>
 #include <QHostAddress>
 #include <QMessageBox>
-#include <QMetaType>
 #include <QString>
 #include <QTcpSocket>
 #include <QDialog>

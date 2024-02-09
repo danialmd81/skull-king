@@ -2,11 +2,8 @@
 #define KING_H
 
 #include "card.h"
-#include <QByteArray>
 #include <fstream>
-#include <iostream>
-#include <set>
-#include <sstream>
+#include <vector>
 
 using namespace std;
 

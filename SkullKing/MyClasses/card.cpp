@@ -22,7 +22,10 @@ Card::Card(Cards name, int number)
 
 string Card::filepath()
 {
-    return from_Cards_to_string(this->Name) + to_string(Number) + ".png";
+    if (Number != 0)
+        return from_Cards_to_string(this->Name) + to_string(Number) + ".png";
+    else
+        return from_Cards_to_string(this->Name) + ".png";
 }
 
 void Card::save()

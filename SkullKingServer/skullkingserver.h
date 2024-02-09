@@ -9,8 +9,8 @@
 #include <QFile>
 #include <QFileInfo>
 #include <QString>
+#include <QThread>
 #include <fstream>
-#include <iostream>
 #include <map>
 #include "MyClasses/king.h"
 #include "MyClasses/deck.h"
@@ -44,7 +44,7 @@ private slots:
 
     void start_game();
     void start_round(int r);
-    // void play_card(QTcpSocket *qts);
+    void play_card(QTcpSocket *qts);
 
 private:
     Ui::SkullKingServer *ui;

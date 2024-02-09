@@ -113,7 +113,7 @@ void SkullKingServer::readSocket()
             }
             else if (signal == "play_card")
             {
-                // play_card(socket);
+                play_card(socket);
             }
             else if (signal == "round_ended")
             {
@@ -134,6 +134,7 @@ void SkullKingServer::readSocket()
         QString signal(buffer.toStdString().c_str());
         if (signal == "start_game_ended")
         {
+            QThread::msleep(1000);
             start_round(1);
         }
     }
@@ -233,7 +234,6 @@ void SkullKingServer::sendFile(QTcpSocket *socket, QString filePath, QString sig
 
 void SkullKingServer::start_game()
 {
-    Card starter_cards[clients.size()];
     ofstream file;
     file.open("start.txt", ios::out | ios::trunc);
     for (auto &&i : clients)
@@ -254,6 +254,7 @@ void SkullKingServer::start_round(int r)
 {
     for (auto &&king : clients)
     {
+        king.second.reset_hand();
         for (int i = 0; i < 2 * r; i++)
         {
             king.second.hand().push_back(deck.random());
@@ -264,14 +265,13 @@ void SkullKingServer::start_round(int r)
     deck.reset();
 }
 
-// void SkullKingServer::play_card(QTcpSocket *qts)
-// {
-// auto it = clients.find(qts);
-// for (auto &&i : clients)
-// {
-//     if (i.first != it->first)
-//     {
-//         sendFile(i.first, "card.txt", "play_card");
-//     }
-// }
-// }
+void SkullKingServer::play_card(QTcpSocket *qts)
+{
+    for (auto &&i : clients)
+    {
+        if (i.first != qts)
+        {
+            sendFile(i.first, "card.txt", "play_card");
+        }
+    }
+}

@@ -1,12 +1,11 @@
 #ifndef GAME_H
 #define GAME_H
 
+#include <QDialog>
 #include "MyClasses/king.h"
 #include "MyClasses/card.h"
 #include "Game/client.h"
-#include <QDialog>
 #include <unordered_map>
-#include <QDebug>
 
 namespace Ui
 {
@@ -25,8 +24,9 @@ private slots:
     void card_clicked();
     void on_Stop_clicked();
     void connected_to_server();
-    void GameStart(std::string filepath);
+    void StartGame(std::string filepath);
     void StartRound();
+    void play_card();
 
 private:
     Ui::Game *ui;
@@ -36,6 +36,12 @@ private:
     Client *client;
     unordered_map<QPushButton *, Card *> king_cards;
     unordered_map<QPushButton *, Card *>::iterator card;
+    Card *op_card, *k_card;
+
+    void set_card(QPushButton *, Card);
+    void set_card(QLabel *, Card);
+    void unset_card(QPushButton *);
+    void unset_card(QLabel *);
 };
 
 #endif // GAME_H

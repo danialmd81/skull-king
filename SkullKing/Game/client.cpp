@@ -66,7 +66,7 @@ void Client::readSocket()
         QString size = header.split(",")[3].split(":")[1].split(";")[0];
         QString filePath = fileName;
         QFile file(filePath);
-        if (file.open(QIODevice::WriteOnly))
+        if (file.open(QIODevice::WriteOnly | QIODevice::Truncate))
         {
             file.write(buffer);
             file.close();

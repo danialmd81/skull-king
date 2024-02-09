@@ -53,14 +53,15 @@ Game::Game(King *king, QWidget *parent) : QDialog(parent), ui(new Ui::Game)
     ui->KingCard->hide();
     ui->OpponentCard->hide();
     this->showFullScreen();
-    // client = new Client(this);
-    // connect(client, &Client::connected_to_server, this, &Game::connected_to_server);
-    // connect(client, &Client::start_game, this, &Game::GameStart);
-    // connect(client, &Client::start_round, this, &Game::StartRound);
-    // client->show();
-    // client->setModal(true);
-    // GameStart("start.txt");
-    StartRound();
+    client = new Client(this);
+    connect(client, &Client::connected_to_server, this, &Game::connected_to_server);
+    connect(client, &Client::start_game, this, &Game::StartGame);
+    connect(client, &Client::start_round, this, &Game::StartRound);
+    connect(client, &Client::play_card, this, &Game::play_card);
+    client->show();
+    client->setModal(true);
+    // GameStart("start.txt");//it's for testing
+    // StartRound();//it's for testing
 }
 
 void Game::connected_to_server()
@@ -68,7 +69,33 @@ void Game::connected_to_server()
     client->sendFile(king->filePath().c_str(), "king");
 }
 
-void Game::GameStart(string filepath) // for more than 2 players u need to change this function.
+void Game::set_card(QPushButton *button, Card card)
+{
+    button->show();
+    string styleSheet_str("border-image: url(:/Resource/Cards/");
+    button->setStyleSheet((styleSheet_str + card.filepath() + ");").c_str());
+}
+
+void Game::set_card(QLabel *label, Card card)
+{
+    label->show();
+    string styleSheet_str("border-image: url(:/Resource/Cards/");
+    label->setStyleSheet((styleSheet_str + card.filepath() + ");").c_str());
+}
+
+void Game::unset_card(QPushButton *button)
+{
+    button->setStyleSheet("border-image:none;");
+    button->hide();
+}
+
+void Game::unset_card(QLabel *label)
+{
+    label->setStyleSheet("border-image:none;");
+    label->hide();
+}
+
+void Game::StartGame(string filepath) // for more than 2 players u need to change this function.
 {
     opponent_king = new King;
     ifstream file;
@@ -96,11 +123,8 @@ void Game::GameStart(string filepath) // for more than 2 players u need to chang
     }
     file.close();
     ui->OpponentName->setText(opponent_king->username().c_str());
-    ui->OpponentCard->show();
-    ui->KingCard->show();
-    string styleSheet_str("border-image: url(:/Resource/Cards/");
-    ui->OpponentCard->setStyleSheet((styleSheet_str + opponent_king->starter_card().filepath() + ");").c_str());
-    ui->KingCard->setStyleSheet((styleSheet_str + king->starter_card().filepath() + ");").c_str());
+    set_card(ui->OpponentCard, opponent_king->starter_card());
+    set_card(ui->KingCard, king->starter_card());
     if (king->starter_card() < opponent_king->starter_card())
         turn = false;
     else
@@ -110,346 +134,27 @@ void Game::GameStart(string filepath) // for more than 2 players u need to chang
 
 void Game::StartRound()
 {
-    // king->load();
-    ui->KingCard->hide();
-    ui->OpponentCard->hide();
+    king->reset_hand();
+    king->load(); // it's for real
+    unset_card(ui->KingCard);
+    unset_card(ui->OpponentCard);
     int round = king->hand().size() / 2;
     for (auto &&i : king->hand())
     {
         i.undelete_it();
     }
     sort(king->hand().begin(), king->hand().end());
-    ui->KingCard->setStyleSheet("border-image:none;");
-    ui->OpponentCard->setStyleSheet("border-image:none;");
-    string styleSheet_str("border-image: url(:/Resource/Cards/");
+    // turn = true; // it's for testing
     if (round == 1)
     {
-        ui->Card1->show();
-        ui->Card2->show();
+        set_card(ui->Card1, king->hand().at(0));
+        set_card(ui->Card2, king->hand().at(1));
         ui->BackCard_1->show();
         ui->BackCard_2->show();
-        ui->Card1->setStyleSheet((styleSheet_str + king->hand().at(0).filepath() + ");").c_str());
-        ui->Card2->setStyleSheet((styleSheet_str + king->hand().at(1).filepath() + ");").c_str());
         king_cards.insert(pair(ui->Card1, &king->hand().at(0)));
         king_cards.insert(pair(ui->Card2, &king->hand().at(1)));
+        // play_card(); // it's for testing
     }
-    // else if (round == 2)
-    // {
-    //     buttons.insert(make_pair(ui->pushButtonCard1, &king->hand().at(0)));
-    //     ui->pushButtonCard1->setIcon(QIcon(king->hand().at(0).pixmap()));
-    //     ui->pushButtonCard1->setIconSize(king->hand().at(0).pixmap().rect().size());
-    //     ui->pushButtonCard1->show();
-
-    //     buttons.insert(make_pair(ui->pushButtonCard2, &king->hand().at(1)));
-    //     ui->pushButtonCard2->setIcon(QIcon(king->hand().at(1).pixmap()));
-    //     ui->pushButtonCard2->setIconSize(king->hand().at(1).pixmap().rect().size());
-    //     ui->pushButtonCard2->show();
-
-    //     buttons.insert(make_pair(ui->pushButtonCard3, &king->hand().at(2)));
-    //     ui->pushButtonCard3->setIcon(QIcon(king->hand().at(2).pixmap()));
-    //     ui->pushButtonCard3->setIconSize(king->hand().at(2).pixmap().rect().size());
-    //     ui->pushButtonCard3->show();
-
-    //     buttons.insert(make_pair(ui->pushButtonCard4, &king->hand().at(3)));
-    //     ui->pushButtonCard4->setIcon(QIcon(king->hand().at(3).pixmap()));
-    //     ui->pushButtonCard4->setIconSize(king->hand().at(3).pixmap().rect().size());
-    //     ui->pushButtonCard4->show();
-
-    //     ui->pushButtonCard5->hide();
-    //     ui->pushButtonCard6->hide();
-    //     ui->pushButtonCard7->hide();
-    //     ui->pushButtonCard8->hide();
-    //     ui->pushButtonCard9->hide();
-    //     ui->pushButtonCard10->hide();
-    //     ui->pushButtonCard11->hide();
-    //     ui->pushButtonCard12->hide();
-    //     ui->pushButtonCard13->hide();
-    //     ui->pushButtonCard14->hide();
-    // }
-    // else if (round == 3)
-    // {
-    //     buttons.insert(make_pair(ui->pushButtonCard1, &king->hand().at(0)));
-    //     ui->pushButtonCard1->setIcon(QIcon(king->hand().at(0).pixmap()));
-    //     ui->pushButtonCard1->setIconSize(king->hand().at(0).pixmap().rect().size());
-    //     ui->pushButtonCard1->show();
-
-    //     buttons.insert(make_pair(ui->pushButtonCard2, &king->hand().at(1)));
-    //     ui->pushButtonCard2->setIcon(QIcon(king->hand().at(1).pixmap()));
-    //     ui->pushButtonCard2->setIconSize(king->hand().at(1).pixmap().rect().size());
-    //     ui->pushButtonCard2->show();
-
-    //     buttons.insert(make_pair(ui->pushButtonCard3, &king->hand().at(2)));
-    //     ui->pushButtonCard3->setIcon(QIcon(king->hand().at(2).pixmap()));
-    //     ui->pushButtonCard3->setIconSize(king->hand().at(2).pixmap().rect().size());
-    //     ui->pushButtonCard3->show();
-
-    //     buttons.insert(make_pair(ui->pushButtonCard4, &king->hand().at(3)));
-    //     ui->pushButtonCard4->setIcon(QIcon(king->hand().at(3).pixmap()));
-    //     ui->pushButtonCard4->setIconSize(king->hand().at(3).pixmap().rect().size());
-    //     ui->pushButtonCard4->show();
-
-    //     buttons.insert(make_pair(ui->pushButtonCard5, &king->hand().at(4)));
-    //     ui->pushButtonCard5->setIcon(QIcon(king->hand().at(4).pixmap()));
-    //     ui->pushButtonCard5->setIconSize(king->hand().at(4).pixmap().rect().size());
-    //     ui->pushButtonCard5->show();
-
-    //     buttons.insert(make_pair(ui->pushButtonCard6, &king->hand().at(5)));
-    //     ui->pushButtonCard6->setIcon(QIcon(king->hand().at(5).pixmap()));
-    //     ui->pushButtonCard6->setIconSize(king->hand().at(5).pixmap().rect().size());
-    //     ui->pushButtonCard6->show();
-
-    //     ui->pushButtonCard7->hide();
-    //     ui->pushButtonCard8->hide();
-    //     ui->pushButtonCard9->hide();
-    //     ui->pushButtonCard10->hide();
-    //     ui->pushButtonCard11->hide();
-    //     ui->pushButtonCard12->hide();
-    //     ui->pushButtonCard13->hide();
-    //     ui->pushButtonCard14->hide();
-    // }
-    // else if (round == 4)
-    // {
-    //     buttons.insert(make_pair(ui->pushButtonCard1, &king->hand().at(0)));
-    //     ui->pushButtonCard1->setIcon(QIcon(king->hand().at(0).pixmap()));
-    //     ui->pushButtonCard1->setIconSize(king->hand().at(0).pixmap().rect().size());
-    //     ui->pushButtonCard1->show();
-
-    //     buttons.insert(make_pair(ui->pushButtonCard2, &king->hand().at(1)));
-    //     ui->pushButtonCard2->setIcon(QIcon(king->hand().at(1).pixmap()));
-    //     ui->pushButtonCard2->setIconSize(king->hand().at(1).pixmap().rect().size());
-    //     ui->pushButtonCard2->show();
-
-    //     buttons.insert(make_pair(ui->pushButtonCard3, &king->hand().at(2)));
-    //     ui->pushButtonCard3->setIcon(QIcon(king->hand().at(2).pixmap()));
-    //     ui->pushButtonCard3->setIconSize(king->hand().at(2).pixmap().rect().size());
-    //     ui->pushButtonCard3->show();
-
-    //     buttons.insert(make_pair(ui->pushButtonCard4, &king->hand().at(3)));
-    //     ui->pushButtonCard4->setIcon(QIcon(king->hand().at(3).pixmap()));
-    //     ui->pushButtonCard4->setIconSize(king->hand().at(3).pixmap().rect().size());
-    //     ui->pushButtonCard4->show();
-
-    //     buttons.insert(make_pair(ui->pushButtonCard5, &king->hand().at(4)));
-    //     ui->pushButtonCard5->setIcon(QIcon(king->hand().at(4).pixmap()));
-    //     ui->pushButtonCard5->setIconSize(king->hand().at(4).pixmap().rect().size());
-    //     ui->pushButtonCard5->show();
-
-    //     buttons.insert(make_pair(ui->pushButtonCard6, &king->hand().at(5)));
-    //     ui->pushButtonCard6->setIcon(QIcon(king->hand().at(5).pixmap()));
-    //     ui->pushButtonCard6->setIconSize(king->hand().at(5).pixmap().rect().size());
-    //     ui->pushButtonCard6->show();
-
-    //     buttons.insert(make_pair(ui->pushButtonCard7, &king->hand().at(6)));
-    //     ui->pushButtonCard7->setIcon(QIcon(king->hand().at(6).pixmap()));
-    //     ui->pushButtonCard7->setIconSize(king->hand().at(6).pixmap().rect().size());
-    //     ui->pushButtonCard7->show();
-
-    //     buttons.insert(make_pair(ui->pushButtonCard8, &king->hand().at(7)));
-    //     ui->pushButtonCard8->setIcon(QIcon(king->hand().at(7).pixmap()));
-    //     ui->pushButtonCard8->setIconSize(king->hand().at(7).pixmap().rect().size());
-    //     ui->pushButtonCard8->show();
-
-    //     ui->pushButtonCard9->hide();
-    //     ui->pushButtonCard10->hide();
-    //     ui->pushButtonCard11->hide();
-    //     ui->pushButtonCard12->hide();
-    //     ui->pushButtonCard13->hide();
-    //     ui->pushButtonCard14->hide();
-    // }
-    // else if (round == 5)
-    // {
-    //     buttons.insert(make_pair(ui->pushButtonCard1, &king->hand().at(0)));
-    //     ui->pushButtonCard1->setIcon(QIcon(king->hand().at(0).pixmap()));
-    //     ui->pushButtonCard1->setIconSize(king->hand().at(0).pixmap().rect().size());
-    //     ui->pushButtonCard1->show();
-
-    //     buttons.insert(make_pair(ui->pushButtonCard2, &king->hand().at(1)));
-    //     ui->pushButtonCard2->setIcon(QIcon(king->hand().at(1).pixmap()));
-    //     ui->pushButtonCard2->setIconSize(king->hand().at(1).pixmap().rect().size());
-    //     ui->pushButtonCard2->show();
-
-    //     buttons.insert(make_pair(ui->pushButtonCard3, &king->hand().at(2)));
-    //     ui->pushButtonCard3->setIcon(QIcon(king->hand().at(2).pixmap()));
-    //     ui->pushButtonCard3->setIconSize(king->hand().at(2).pixmap().rect().size());
-    //     ui->pushButtonCard3->show();
-
-    //     buttons.insert(make_pair(ui->pushButtonCard4, &king->hand().at(3)));
-    //     ui->pushButtonCard4->setIcon(QIcon(king->hand().at(3).pixmap()));
-    //     ui->pushButtonCard4->setIconSize(king->hand().at(3).pixmap().rect().size());
-    //     ui->pushButtonCard4->show();
-
-    //     buttons.insert(make_pair(ui->pushButtonCard5, &king->hand().at(4)));
-    //     ui->pushButtonCard5->setIcon(QIcon(king->hand().at(4).pixmap()));
-    //     ui->pushButtonCard5->setIconSize(king->hand().at(4).pixmap().rect().size());
-    //     ui->pushButtonCard5->show();
-
-    //     buttons.insert(make_pair(ui->pushButtonCard6, &king->hand().at(5)));
-    //     ui->pushButtonCard6->setIcon(QIcon(king->hand().at(5).pixmap()));
-    //     ui->pushButtonCard6->setIconSize(king->hand().at(5).pixmap().rect().size());
-    //     ui->pushButtonCard6->show();
-
-    //     buttons.insert(make_pair(ui->pushButtonCard7, &king->hand().at(6)));
-    //     ui->pushButtonCard7->setIcon(QIcon(king->hand().at(6).pixmap()));
-    //     ui->pushButtonCard7->setIconSize(king->hand().at(6).pixmap().rect().size());
-    //     ui->pushButtonCard7->show();
-
-    //     buttons.insert(make_pair(ui->pushButtonCard8, &king->hand().at(7)));
-    //     ui->pushButtonCard8->setIcon(QIcon(king->hand().at(7).pixmap()));
-    //     ui->pushButtonCard8->setIconSize(king->hand().at(7).pixmap().rect().size());
-    //     ui->pushButtonCard8->show();
-
-    //     buttons.insert(make_pair(ui->pushButtonCard9, &king->hand().at(8)));
-    //     ui->pushButtonCard9->setIcon(QIcon(king->hand().at(8).pixmap()));
-    //     ui->pushButtonCard9->setIconSize(king->hand().at(8).pixmap().rect().size());
-    //     ui->pushButtonCard9->show();
-
-    //     buttons.insert(make_pair(ui->pushButtonCard10, &king->hand().at(9)));
-    //     ui->pushButtonCard10->setIcon(QIcon(king->hand().at(9).pixmap()));
-    //     ui->pushButtonCard10->setIconSize(king->hand().at(9).pixmap().rect().size());
-    //     ui->pushButtonCard10->show();
-
-    //     ui->pushButtonCard11->hide();
-    //     ui->pushButtonCard12->hide();
-    //     ui->pushButtonCard13->hide();
-    //     ui->pushButtonCard14->hide();
-    // }
-    // else if (round == 6)
-    // {
-    //     buttons.insert(make_pair(ui->pushButtonCard1, &king->hand().at(0)));
-    //     ui->pushButtonCard1->setIcon(QIcon(king->hand().at(0).pixmap()));
-    //     ui->pushButtonCard1->setIconSize(king->hand().at(0).pixmap().rect().size());
-    //     ui->pushButtonCard1->show();
-
-    //     buttons.insert(make_pair(ui->pushButtonCard2, &king->hand().at(1)));
-    //     ui->pushButtonCard2->setIcon(QIcon(king->hand().at(1).pixmap()));
-    //     ui->pushButtonCard2->setIconSize(king->hand().at(1).pixmap().rect().size());
-    //     ui->pushButtonCard2->show();
-
-    //     buttons.insert(make_pair(ui->pushButtonCard3, &king->hand().at(2)));
-    //     ui->pushButtonCard3->setIcon(QIcon(king->hand().at(2).pixmap()));
-    //     ui->pushButtonCard3->setIconSize(king->hand().at(2).pixmap().rect().size());
-    //     ui->pushButtonCard3->show();
-
-    //     buttons.insert(make_pair(ui->pushButtonCard4, &king->hand().at(3)));
-    //     ui->pushButtonCard4->setIcon(QIcon(king->hand().at(3).pixmap()));
-    //     ui->pushButtonCard4->setIconSize(king->hand().at(3).pixmap().rect().size());
-    //     ui->pushButtonCard4->show();
-
-    //     buttons.insert(make_pair(ui->pushButtonCard5, &king->hand().at(4)));
-    //     ui->pushButtonCard5->setIcon(QIcon(king->hand().at(4).pixmap()));
-    //     ui->pushButtonCard5->setIconSize(king->hand().at(4).pixmap().rect().size());
-    //     ui->pushButtonCard5->show();
-
-    //     buttons.insert(make_pair(ui->pushButtonCard6, &king->hand().at(5)));
-    //     ui->pushButtonCard6->setIcon(QIcon(king->hand().at(5).pixmap()));
-    //     ui->pushButtonCard6->setIconSize(king->hand().at(5).pixmap().rect().size());
-    //     ui->pushButtonCard6->show();
-
-    //     buttons.insert(make_pair(ui->pushButtonCard7, &king->hand().at(6)));
-    //     ui->pushButtonCard7->setIcon(QIcon(king->hand().at(6).pixmap()));
-    //     ui->pushButtonCard7->setIconSize(king->hand().at(6).pixmap().rect().size());
-    //     ui->pushButtonCard7->show();
-
-    //     buttons.insert(make_pair(ui->pushButtonCard8, &king->hand().at(7)));
-    //     ui->pushButtonCard8->setIcon(QIcon(king->hand().at(7).pixmap()));
-    //     ui->pushButtonCard8->setIconSize(king->hand().at(7).pixmap().rect().size());
-    //     ui->pushButtonCard8->show();
-
-    //     buttons.insert(make_pair(ui->pushButtonCard9, &king->hand().at(8)));
-    //     ui->pushButtonCard9->setIcon(QIcon(king->hand().at(8).pixmap()));
-    //     ui->pushButtonCard9->setIconSize(king->hand().at(8).pixmap().rect().size());
-    //     ui->pushButtonCard9->show();
-
-    //     buttons.insert(make_pair(ui->pushButtonCard10, &king->hand().at(9)));
-    //     ui->pushButtonCard10->setIcon(QIcon(king->hand().at(9).pixmap()));
-    //     ui->pushButtonCard10->setIconSize(king->hand().at(9).pixmap().rect().size());
-    //     ui->pushButtonCard10->show();
-
-    //     buttons.insert(make_pair(ui->pushButtonCard11, &king->hand().at(10)));
-    //     ui->pushButtonCard11->setIcon(QIcon(king->hand().at(10).pixmap()));
-    //     ui->pushButtonCard11->setIconSize(king->hand().at(10).pixmap().rect().size());
-    //     ui->pushButtonCard11->show();
-
-    //     buttons.insert(make_pair(ui->pushButtonCard12, &king->hand().at(11)));
-    //     ui->pushButtonCard12->setIcon(QIcon(king->hand().at(11).pixmap()));
-    //     ui->pushButtonCard12->setIconSize(king->hand().at(11).pixmap().rect().size());
-    //     ui->pushButtonCard12->show();
-
-    //     ui->pushButtonCard13->hide();
-    //     ui->pushButtonCard14->hide();
-    // }
-    // else if (round == 7)
-    // {
-    //     buttons.insert(make_pair(ui->pushButtonCard1, &king->hand().at(0)));
-    //     ui->pushButtonCard1->setIcon(QIcon(king->hand().at(0).pixmap()));
-    //     ui->pushButtonCard1->setIconSize(king->hand().at(0).pixmap().rect().size());
-    //     ui->pushButtonCard1->show();
-
-    //     buttons.insert(make_pair(ui->pushButtonCard2, &king->hand().at(1)));
-    //     ui->pushButtonCard2->setIcon(QIcon(king->hand().at(1).pixmap()));
-    //     ui->pushButtonCard2->setIconSize(king->hand().at(1).pixmap().rect().size());
-    //     ui->pushButtonCard2->show();
-
-    //     buttons.insert(make_pair(ui->pushButtonCard3, &king->hand().at(2)));
-    //     ui->pushButtonCard3->setIcon(QIcon(king->hand().at(2).pixmap()));
-    //     ui->pushButtonCard3->setIconSize(king->hand().at(2).pixmap().rect().size());
-    //     ui->pushButtonCard3->show();
-
-    //     buttons.insert(make_pair(ui->pushButtonCard4, &king->hand().at(3)));
-    //     ui->pushButtonCard4->setIcon(QIcon(king->hand().at(3).pixmap()));
-    //     ui->pushButtonCard4->setIconSize(king->hand().at(3).pixmap().rect().size());
-    //     ui->pushButtonCard4->show();
-
-    //     buttons.insert(make_pair(ui->pushButtonCard5, &king->hand().at(4)));
-    //     ui->pushButtonCard5->setIcon(QIcon(king->hand().at(4).pixmap()));
-    //     ui->pushButtonCard5->setIconSize(king->hand().at(4).pixmap().rect().size());
-    //     ui->pushButtonCard5->show();
-
-    //     buttons.insert(make_pair(ui->pushButtonCard6, &king->hand().at(5)));
-    //     ui->pushButtonCard6->setIcon(QIcon(king->hand().at(5).pixmap()));
-    //     ui->pushButtonCard6->setIconSize(king->hand().at(5).pixmap().rect().size());
-    //     ui->pushButtonCard6->show();
-
-    //     buttons.insert(make_pair(ui->pushButtonCard7, &king->hand().at(6)));
-    //     ui->pushButtonCard7->setIcon(QIcon(king->hand().at(6).pixmap()));
-    //     ui->pushButtonCard7->setIconSize(king->hand().at(6).pixmap().rect().size());
-    //     ui->pushButtonCard7->show();
-
-    //     buttons.insert(make_pair(ui->pushButtonCard8, &king->hand().at(7)));
-    //     ui->pushButtonCard8->setIcon(QIcon(king->hand().at(7).pixmap()));
-    //     ui->pushButtonCard8->setIconSize(king->hand().at(7).pixmap().rect().size());
-    //     ui->pushButtonCard8->show();
-
-    //     buttons.insert(make_pair(ui->pushButtonCard9, &king->hand().at(8)));
-    //     ui->pushButtonCard9->setIcon(QIcon(king->hand().at(8).pixmap()));
-    //     ui->pushButtonCard9->setIconSize(king->hand().at(8).pixmap().rect().size());
-    //     ui->pushButtonCard9->show();
-
-    //     buttons.insert(make_pair(ui->pushButtonCard10, &king->hand().at(9)));
-    //     ui->pushButtonCard10->setIcon(QIcon(king->hand().at(9).pixmap()));
-    //     ui->pushButtonCard10->setIconSize(king->hand().at(9).pixmap().rect().size());
-    //     ui->pushButtonCard10->show();
-
-    //     buttons.insert(make_pair(ui->pushButtonCard11, &king->hand().at(10)));
-    //     ui->pushButtonCard11->setIcon(QIcon(king->hand().at(10).pixmap()));
-    //     ui->pushButtonCard11->setIconSize(king->hand().at(10).pixmap().rect().size());
-    //     ui->pushButtonCard11->show();
-
-    //     buttons.insert(make_pair(ui->pushButtonCard12, &king->hand().at(11)));
-    //     ui->pushButtonCard12->setIcon(QIcon(king->hand().at(11).pixmap()));
-    //     ui->pushButtonCard12->setIconSize(king->hand().at(11).pixmap().rect().size());
-    //     ui->pushButtonCard12->show();
-
-    //     buttons.insert(make_pair(ui->pushButtonCard13, &king->hand().at(12)));
-    //     ui->pushButtonCard13->setIcon(QIcon(king->hand().at(12).pixmap()));
-    //     ui->pushButtonCard13->setIconSize(king->hand().at(12).pixmap().rect().size());
-    //     ui->pushButtonCard13->show();
-
-    //     buttons.insert(make_pair(ui->pushButtonCard14, &king->hand().at(13)));
-    //     ui->pushButtonCard14->setIcon(QIcon(king->hand().at(13).pixmap()));
-    //     ui->pushButtonCard14->setIconSize(king->hand().at(13).pixmap().rect().size());
-    //     ui->pushButtonCard14->show();
-    // }
 
     // will = new WillWin(round, this);
     // will->setModal(true);
@@ -467,123 +172,128 @@ void Game::StartRound()
 
 void Game::card_clicked()
 {
-    string styleSheet_str("border-image: url(:/Resource/Cards/");
     QPushButton *selected_card = reinterpret_cast<QPushButton *>(sender());
     card = king_cards.find(selected_card);
-    // turn = true;
+    // turn = true;//it's for testing
     if (turn)
     {
         if (ui->KingCard->isHidden() && ui->OpponentCard->isHidden()) // for first hand play
         {
-            ui->KingCard->show();
-            ui->KingCard->setStyleSheet((styleSheet_str + card->second->filepath() + ");").c_str());
+            set_card(ui->KingCard, *card->second);
             selected_card->hide();
             card->second->delete_it();
             card->second->save();
+            k_card = card->second;
+            op_card = nullptr;
             turn = false;
             client->sendFile("card.txt", "play_card");
         }
+        else if (ui->KingCard->isHidden() && !ui->OpponentCard->isHidden()) // for second player
+        {
+            if (card->second->compare(*op_card) == -1)
+            {
+                set_card(ui->KingCard, *card->second);
+                selected_card->hide();
+                card->second->delete_it();
+                card->second->save();
+                turn = false;
+                QMessageBox::information(this, "Loose a Hand", "You Loosed this Hand");
+                client->sendFile("card.txt", "play_card");
+            }
+            else if (card->second->compare(*op_card) == 0)
+            {
+                auto it = std::find(king->hand().begin(), king->hand().end(), *op_card);
 
-        // else if (ui->CardLabel1->pixmap().isNull() && !ui->CardLabel2->pixmap().isNull()) // for second player
-        // {
-        //     if (button->second->compare(ground) == -1)
-        //     {
-        //         ui->CardLabel1->setPixmap(button->second->pixmap());
-        //         button->first->hide();
-        //         button->second->delete_it();
-        //         button->second->save();
-        //         king->turn() = false;
-        //         QMessageBox::information(this, "Loose a Hand", "You Loosed this Hand");
-        //         client->sendFile("card.txt", "play_card");
-        //     }
-        //     else if (button->second->compare(ground) == 0)
-        //     {
-        //         auto it = std::find(king->hand().begin(), king->hand().end(), ground);
-        //         if (it != king->hand().end())
-        //         {
-        //             if (!it->is_deleted())
-        //             {
-        //                 QMessageBox::critical(this, "Wrong Choose", "Choose Wisly");
-        //                 return;
-        //             }
-        //             else
-        //             {
-        //                 ui->CardLabel1->setPixmap(button->second->pixmap());
-        //                 button->first->hide();
-        //                 button->second->delete_it();
-        //                 button->second->save();
-        //                 king->turn() = false;
-        //                 QMessageBox::information(this, "Loose a Hand", "You Loosed this Hand");
-        //                 client->sendFile("card.txt", "play_card");
-        //             }
-        //         }
-        //         else
-        //         {
-        //             ui->CardLabel1->setPixmap(button->second->pixmap());
-        //             button->first->hide();
-        //             button->second->delete_it();
-        //             button->second->save();
-        //             king->turn() = false;
-        //             QMessageBox::information(this, "Loose a Hand", "You Loosed this Hand");
-        //             client->sendFile("card.txt", "play_card");
-        //         }
-        //     }
+                if (it != king->hand().end())
+                {
+                    if (!it->is_deleted())
+                    {
+                        QMessageBox::critical(this, "Wrong Choose", "Choose Wisly");
+                        return;
+                    }
+                    else
+                    {
+                        set_card(ui->KingCard, *card->second);
+                        selected_card->hide();
+                        card->second->delete_it();
+                        card->second->save();
+                        turn = false;
+                        QMessageBox::information(this, "Loose a Hand", "You Loosed this Hand");
+                        client->sendFile("card.txt", "play_card");
+                    }
+                }
+                else
+                {
+                    set_card(ui->KingCard, *card->second);
+                    selected_card->hide();
+                    card->second->delete_it();
+                    card->second->save();
+                    turn = false;
+                    QMessageBox::information(this, "Loose a Hand", "You Loosed this Hand");
+                    client->sendFile("card.txt", "play_card");
+                }
+            }
 
-        //     else if (button->second->compare(ground) == 1)
-        //     {
-        //         ui->CardLabel1->setPixmap(button->second->pixmap());
-        //         button->first->hide();
-        //         button->second->delete_it();
-        //         button->second->save();
-        //         winning_card++;
-        //         king->turn() = false;
-        //         QMessageBox::information(this, "Win a Hand", "You Won this Hand");
-        //         client->sendFile("card.txt", "play_card");
-        //     }
+            else if (card->second->compare(*op_card) == 1)
+            {
+                set_card(ui->KingCard, *card->second);
+                selected_card->hide();
+                card->second->delete_it();
+                card->second->save();
+                turn = false;
+                // winning_card++;
+                QMessageBox::information(this, "Win a Hand", "You Won this Hand");
+                client->sendFile("card.txt", "play_card");
+            }
+            else if (card->second->compare(*op_card) == 2)
+            {
+                set_card(ui->KingCard, *card->second);
+                selected_card->hide();
+                card->second->delete_it();
+                card->second->save();
+                turn = false;
+                QMessageBox::information(this, "Loose a Hand", "You Loosed this Hand");
+                client->sendFile("card.txt", "play_card");
+            }
+            else
+            {
+                QMessageBox::critical(this, "Wrong Choose", "Choose Wisly");
+                return;
+            }
 
-        //     else if (button->second->compare(ground) == 2)
-        //     {
-        //         ui->CardLabel1->setPixmap(button->second->pixmap());
-        //         button->first->hide();
-        //         button->second->delete_it();
-        //         button->second->save();
-        //         king->turn() = false;
-        //         QMessageBox::information(this, "Loose a Hand", "You Loosed this Hand");
-        //         client->sendFile("card.txt", "play_card");
-        //     }
+            // ui->CardLabel1->clear();
+            // ui->CardLabel2->clear();
+            // if (king->hand_is_empty())
+            // {
+            //     king_cards.clear();
+            //     king->hand().clear();
 
-        //     else
-        //     {
-        //         QMessageBox::critical(this, "Wrong Choose", "Choose Wisly");
-        //         return;
-        //     }
+            //     ofstream file;
+            //     file.open("round.txt", ios::out | ios::trunc);
+            //     file << round;
+            //     file.close();
+            //     round++;
 
-        //     ui->CardLabel1->clear();
-        //     ui->CardLabel2->clear();
+            //     // proces score here
 
-        //     if (king->hand_is_empty())
-        //     {
-        //         king_cards.clear();
-        //         king->hand().clear();
-
-        //         ofstream file;
-        //         file.open("round.txt", ios::out | ios::trunc);
-        //         file << round;
-        //         file.close();
-        //         round++;
-
-        //         // proces score here
-
-        //         QTest::qWait(500);
-        //         client->sendFile("round.txt", "round_ended");
-        //     }
-        // }
+            //     QTest::qWait(500);
+            //     client->sendFile("round.txt", "round_ended");
+            // }
+        }
     }
 
     else
     {
         QMessageBox::critical(this, "Turn", "It is not your turn");
     }
+}
+
+void Game::play_card()
+{
+    op_card = new Card;
+    op_card->load();
+    set_card(ui->OpponentCard, *op_card);
+    turn = true;
 }
 
 Game::~Game()
