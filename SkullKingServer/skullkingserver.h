@@ -43,14 +43,14 @@ private slots:
     void sendFile(QTcpSocket *socket, QString filePath, QString signal);
 
     void start_game();
-    void start_round(int r);
+    void start_round();
     void play_card(QTcpSocket *qts);
 
 private:
     Ui::SkullKingServer *ui;
     QTcpServer *server;
     QTcpSocket *socket;
-    int client_number;
+    int client_number, round;
     unordered_map<QTcpSocket *, King> clients;
     Deck deck;
 };

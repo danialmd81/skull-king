@@ -59,7 +59,7 @@ bool Card::is_deleted()
     return deleted;
 }
 
-int Card::compare(Card &card) // -1 ->first loose  | 0 -> check  | 1 -> first win  |  2 -> erly
+int Card::compare(Card &card) // -1 ->first loose  | 0 -> check  | 1 -> first win  |  2 -> early is winner
 {
     if (Name == card.Name)
     {

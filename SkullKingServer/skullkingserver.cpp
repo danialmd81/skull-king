@@ -142,8 +142,19 @@ void SkullKingServer::readSocket()
             num++;
             if (num == client_number)
             {
-                QThread::msleep(1000);
-                start_round(1);
+                QThread::msleep(5000);
+                round = 1;
+                start_round();
+            }
+        }
+        else if (signal == "next_round")
+        {
+            static int num = 0;
+            num++;
+            if (num == client_number)
+            {
+                round++;
+                start_round();
             }
         }
     }
@@ -259,12 +270,12 @@ void SkullKingServer::start_game()
     deck.reset();
 }
 
-void SkullKingServer::start_round(int r)
+void SkullKingServer::start_round()
 {
     for (auto &&king : clients)
     {
         king.second.reset_hand();
-        for (int i = 0; i < 2 * r; i++)
+        for (int i = 0; i < 2 * round; i++)
         {
             king.second.hand().push_back(deck.random());
         }

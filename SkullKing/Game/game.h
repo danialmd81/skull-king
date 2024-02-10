@@ -32,16 +32,15 @@ private:
     Ui::Game *ui;
     King *king, *opponent_king;
     bool turn;
-    int round;
     Client *client;
     unordered_map<QPushButton *, Card *> king_cards;
-    unordered_map<QPushButton *, Card *>::iterator card;
     Card *op_card, *k_card;
 
     void set_card(QPushButton *, Card);
     void set_card(QLabel *, Card);
     void unset_card(QPushButton *);
     void unset_card(QLabel *);
+    bool is_all_BackCard_hidden();
 };
 
 #endif // GAME_H
