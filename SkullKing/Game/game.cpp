@@ -5,6 +5,7 @@ Game::Game(King *king, QWidget *parent) : QDialog(parent), ui(new Ui::Game)
 {
     turn = false;
     this->king = new King(*king);
+    op_card = nullptr;
     ui->setupUi(this);
     // this->setCursor(QCursor(QPixmap(":/Resource/Game/cursor.png")));
     ui->KingName->setText(king->username().c_str());
@@ -220,9 +221,7 @@ void Game::card_clicked()
             card->second->delete_it();
             card->second->save();
             k_card = card->second;
-            op_card = nullptr;
             turn = false;
-            client->sendFile("card.txt", "play_card");
         }
         else if (ui->KingCard->isHidden() && !ui->OpponentCard->isHidden()) // for second player
         {
@@ -234,7 +233,6 @@ void Game::card_clicked()
                 card->second->save();
                 turn = false;
                 QMessageBox::information(this, "Loose a Hand", "You Loosed this Hand");
-                client->sendFile("card.txt", "play_card");
             }
             else if (card->second->compare(*op_card) == 0)
             {
@@ -254,7 +252,6 @@ void Game::card_clicked()
                         card->second->save();
                         turn = false;
                         QMessageBox::information(this, "Loose a Hand", "You Loosed this Hand");
-                        client->sendFile("card.txt", "play_card");
                     }
                 }
                 else
@@ -265,7 +262,6 @@ void Game::card_clicked()
                     card->second->save();
                     turn = false;
                     QMessageBox::information(this, "Loose a Hand", "You Loosed this Hand");
-                    client->sendFile("card.txt", "play_card");
                 }
             }
             else if (card->second->compare(*op_card) == 1)
@@ -277,7 +273,6 @@ void Game::card_clicked()
                 turn = false;
                 // winning_card++;
                 QMessageBox::information(this, "Win a Hand", "You Won this Hand");
-                client->sendFile("card.txt", "play_card");
             }
             else if (card->second->compare(*op_card) == 2)
             {
@@ -287,7 +282,6 @@ void Game::card_clicked()
                 card->second->save();
                 turn = false;
                 QMessageBox::information(this, "Loose a Hand", "You Loosed this Hand");
-                client->sendFile("card.txt", "play_card");
             }
             else
             {
@@ -296,14 +290,16 @@ void Game::card_clicked()
             }
             unset_card(ui->KingCard);
             unset_card(ui->OpponentCard);
+            delete op_card;
             if (king->all_cards_is_deleted())
             {
                 king_cards.clear();
-                king->hand().clear();
+                king->reset_hand();
                 // proces score here
                 client->sendSignal("next_round");
             }
         }
+        client->sendFile("card.txt", "play_card");
     }
     else
     {
@@ -353,6 +349,7 @@ void Game::PlayCard()
         }
         unset_card(ui->KingCard);
         unset_card(ui->OpponentCard);
+        delete op_card;
     }
     if (!ui->BackCard_1->isHidden())
     {

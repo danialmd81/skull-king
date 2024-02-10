@@ -10,6 +10,28 @@ SkullKingServer::SkullKingServer(QWidget *parent) : QDialog(parent), ui(new Ui::
     ui->Port->hide();
     ui->label_3->hide();
     ui->label->hide();
+
+    client_number = 2;
+    ui->Ok->hide();
+    ui->Ip->show();
+    ui->Port->show();
+    ui->label_3->show();
+    ui->label->show();
+    ui->player_number->setText("Player Connected to Server:0");
+    ui->number_of_players->hide();
+    server = new QTcpServer();
+    if (server->listen(QHostAddress::LocalHost, 56000))
+    {
+        ui->Ip->setText(server->serverAddress().toString());
+        ui->Port->setText(to_string(server->serverPort()).c_str());
+        connect(server, &QTcpServer::newConnection, this, &SkullKingServer::newConnection);
+    }
+    else
+    {
+        QMessageBox::critical(this, "QTCPServer",
+                              QString("Unable to start the server: %1.").arg(server->errorString()));
+        exit;
+    }
 }
 
 SkullKingServer::~SkullKingServer()
@@ -111,7 +133,7 @@ void SkullKingServer::readSocket()
                 num++;
                 if (num == client_number)
                 {
-                    this->hide();
+                    // this->hide();
                     start_game();
                 }
             }
@@ -119,22 +141,12 @@ void SkullKingServer::readSocket()
             {
                 play_card(socket);
             }
-            else if (message == "round_ended")
-            {
-                ifstream file;
-                file.open("round.txt", ios::in);
-                // file >> round;
-                // file.close();
-                // round++;
-                // start_round(socket, round);
-            }
         }
         else
             QMessageBox::critical(this, "QTCPServer", "An error occurred while trying to write the attachment.");
     }
     else if (fileType == "signal")
     {
-        // int round_ended_times = 0;
         QString signal(buffer.toStdString().c_str());
         if (signal == "start_game_ended")
         {
@@ -142,9 +154,10 @@ void SkullKingServer::readSocket()
             num++;
             if (num == client_number)
             {
-                QThread::msleep(5000);
+                QThread::msleep(3000);
                 round = 1;
                 start_round();
+                num = 0;
             }
         }
         else if (signal == "next_round")
@@ -153,6 +166,7 @@ void SkullKingServer::readSocket()
             num++;
             if (num == client_number)
             {
+                num = 0;
                 round++;
                 start_round();
             }
