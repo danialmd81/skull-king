@@ -26,7 +26,7 @@ private slots:
     void connected_to_server();
     void StartGame(std::string filepath);
     void StartRound();
-    void play_card();
+    void PlayCard();
 
 private:
     Ui::Game *ui;

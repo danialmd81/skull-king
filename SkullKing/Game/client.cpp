@@ -20,31 +20,32 @@ Client::~Client()
 
 void Client::on_Connect_clicked()
 {
-    if (ui->Ip->text().isEmpty() || ui->Port->text().isEmpty())
+    // if (ui->Ip->text().isEmpty() || ui->Port->text().isEmpty())
+    // {
+    //     QMessageBox::critical(this, "Fields", "Fill the empty fields");
+    // }
+    // else
+    // {
+    // QHostAddress address(ui->Ip->text());
+    // socket->connectToHost(address, ui->Port->text().toInt());
+    socket->connectToHost(QHostAddress::LocalHost, 56000);
+    if (socket->waitForConnected(3000))
     {
-        QMessageBox::critical(this, "Fields", "Fill the empty fields");
+        QMessageBox::information(this, "Connected", "Connected to Server");
+        ui->Status->setText("Waiting for Opponent(s) Connection to Server...");
+        ui->Connect->hide();
+        emit connected_to_server();
+        return;
     }
     else
     {
-        // QHostAddress address(ui->Ip->text());
-        // socket->connectToHost(address, ui->Port->text().toInt());
-        socket->connectToHost(QHostAddress::LocalHost, 56000);
-        if (socket->waitForConnected(3000))
-        {
-            QMessageBox::information(this, "Connected", "Connected to Server");
-            ui->Status->setText("Waiting for Opponent(s) Connection to Server...");
-            ui->Connect->hide();
-            emit connected_to_server();
-        }
-        else
-        {
-            QMessageBox::critical(this, "QTCPClient",
-                                  QString("The following error occurred: %1.").arg(socket->errorString()));
-        }
+        QMessageBox::critical(this, "QTCPClient",
+                              QString("The following error occurred: %1.").arg(socket->errorString()));
     }
+    // }
 }
 
-void Client::readSocket()
+void Client::readSocket() //
 {
     QByteArray buffer;
     QDataStream socketStream(socket);
@@ -74,14 +75,17 @@ void Client::readSocket()
             {
                 this->hide();
                 emit start_game(filePath.toStdString());
+                return;
             }
             else if (signal == "start_round")
             {
                 emit start_round();
+                return;
             }
             else if (signal == "play_card")
             {
                 emit play_card();
+                return;
             }
         }
         else
@@ -92,17 +96,18 @@ void Client::readSocket()
         QString signal(buffer.toStdString().c_str());
         if (signal == "already_connected") // delete this
         {
+            return;
         }
     }
 }
 
-void Client::discardSocket()
+void Client::discardSocket() // Okay
 {
     socket->deleteLater();
     socket = nullptr;
 }
 
-void Client::displayError(QAbstractSocket::SocketError socketError)
+void Client::displayError(QAbstractSocket::SocketError socketError) // Okay
 {
     switch (socketError)
     {
@@ -124,7 +129,7 @@ void Client::displayError(QAbstractSocket::SocketError socketError)
     }
 }
 
-void Client::sendSignal(QString signal)
+void Client::sendSignal(QString signal) // Okay
 {
     if (socket)
     {
@@ -133,7 +138,7 @@ void Client::sendSignal(QString signal)
             QDataStream socketStream(socket);
             socketStream.setVersion(QDataStream::Qt_6_5);
             QByteArray header;
-            header.prepend(QString("fileType:signal,fileName:null,fileSize:%1;").arg(signal.size()).toUtf8());
+            header.prepend(QString("Type:signal,Name:null,Size:%1;").arg(signal.size()).toUtf8());
             header.resize(128);
             QByteArray byteArray = signal.toUtf8();
             byteArray.prepend(header);
@@ -146,7 +151,7 @@ void Client::sendSignal(QString signal)
         QMessageBox::critical(this, "QTCPClient", "Not connected");
 }
 
-void Client::sendFile(QString filePath, QString signal)
+void Client::sendFile(QString filePath, QString signal) // Okay
 {
     if (socket)
     {
@@ -162,14 +167,11 @@ void Client::sendFile(QString filePath, QString signal)
             {
                 QFileInfo fileInfo(m_file.fileName());
                 QString fileName(fileInfo.fileName());
+
                 QDataStream socketStream(socket);
                 socketStream.setVersion(QDataStream::Qt_6_5);
                 QByteArray header;
-                header.prepend(QString("fileType:file,fileName:%1,signal:%2,fileSize:%3;")
-                                   .arg(fileName)
-                                   .arg(signal)
-                                   .arg(m_file.size())
-                                   .toUtf8());
+                header.prepend(QString("Type:file,Name:%1,signal:%2,Size:%3;").arg(fileName).arg(signal).arg(m_file.size()).toUtf8());
                 header.resize(128);
                 QByteArray byteArray = m_file.readAll();
                 byteArray.prepend(header);

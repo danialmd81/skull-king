@@ -61,36 +61,40 @@ void SkullKingServer::newConnection()
 
 void SkullKingServer::appendToSocketList(QTcpSocket *socket)
 {
-    if (clients.find(socket) == clients.end())
-    {
-        clients.insert(pair(socket, King()));
-        ui->player_number->setText(("Player Connected to Server:" + to_string(clients.size())).c_str());
-        connect(socket, &QTcpSocket::readyRead, this, &SkullKingServer::readSocket);
-        connect(socket, &QTcpSocket::disconnected, this, &SkullKingServer::discardSocket);
-        connect(socket, &QTcpSocket::errorOccurred, this, &SkullKingServer::displayError);
-    }
+    clients.insert(pair(socket, King()));
+    ui->player_number->setText(("Player Connected to Server:" + to_string(clients.size())).c_str());
+    connect(socket, &QTcpSocket::readyRead, this, &SkullKingServer::readSocket);
+    connect(socket, &QTcpSocket::disconnected, this, &SkullKingServer::discardSocket);
+    connect(socket, &QTcpSocket::errorOccurred, this, &SkullKingServer::displayError);
 }
 
 void SkullKingServer::readSocket()
 {
     QTcpSocket *socket = reinterpret_cast<QTcpSocket *>(sender());
+
     QByteArray buffer;
+
     QDataStream socketStream(socket);
     socketStream.setVersion(QDataStream::Qt_6_5);
+
     socketStream.startTransaction();
     socketStream >> buffer;
+
     if (!socketStream.commitTransaction())
     {
         return;
     }
     QString header = buffer.mid(0, 128);
+
     QString fileType = header.split(",")[0].split(":")[1];
+
     buffer = buffer.mid(128);
+
     if (fileType == "file")
     {
         QString fileName = header.split(",")[1].split(":")[1];
         QString ext = fileName.split(".")[1];
-        QString signal = header.split(",")[2].split(":")[1];
+        QString message = header.split(",")[2].split(":")[1];
         QString size = header.split(",")[3].split(":")[1].split(";")[0];
         QString filePath = fileName;
         QFile file(filePath);
@@ -98,7 +102,7 @@ void SkullKingServer::readSocket()
         {
             file.write(buffer);
             file.close();
-            if (signal == "king")
+            if (message == "king")
             {
                 static int num = 0;
                 King king;
@@ -111,11 +115,11 @@ void SkullKingServer::readSocket()
                     start_game();
                 }
             }
-            else if (signal == "play_card")
+            else if (message == "play_card")
             {
                 play_card(socket);
             }
-            else if (signal == "round_ended")
+            else if (message == "round_ended")
             {
                 ifstream file;
                 file.open("round.txt", ios::in);
@@ -130,12 +134,17 @@ void SkullKingServer::readSocket()
     }
     else if (fileType == "signal")
     {
-        int round_ended_times = 0;
+        // int round_ended_times = 0;
         QString signal(buffer.toStdString().c_str());
         if (signal == "start_game_ended")
         {
-            QThread::msleep(1000);
-            start_round(1);
+            static int num = 0;
+            num++;
+            if (num == client_number)
+            {
+                QThread::msleep(1000);
+                start_round(1);
+            }
         }
     }
 }

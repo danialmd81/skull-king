@@ -57,7 +57,7 @@ Game::Game(King *king, QWidget *parent) : QDialog(parent), ui(new Ui::Game)
     connect(client, &Client::connected_to_server, this, &Game::connected_to_server);
     connect(client, &Client::start_game, this, &Game::StartGame);
     connect(client, &Client::start_round, this, &Game::StartRound);
-    connect(client, &Client::play_card, this, &Game::play_card);
+    connect(client, &Client::play_card, this, &Game::PlayCard);
     client->show();
     client->setModal(true);
     // GameStart("start.txt");//it's for testing
@@ -288,7 +288,7 @@ void Game::card_clicked()
     }
 }
 
-void Game::play_card()
+void Game::PlayCard()
 {
     op_card = new Card;
     op_card->load();
