@@ -2,7 +2,8 @@
 #define GAME_H
 
 #include <QDialog>
-#include <QThread>
+#include <QMessageBox>
+#include <QTimer>
 #include "MyClasses/king.h"
 #include "MyClasses/card.h"
 #include "Game/client.h"
@@ -24,10 +25,12 @@ public:
 private slots:
     void card_clicked();
     void on_Stop_clicked();
+    void on_Exit_clicked();
     void connected_to_server();
     void StartGame(std::string filepath);
     void StartRound();
     void PlayCard();
+    void Pause();
 
 private:
     Ui::Game *ui;

@@ -9,7 +9,7 @@
 #include <QFile>
 #include <QFileInfo>
 #include <QString>
-#include <QThread>
+#include <QTimer>
 #include <fstream>
 #include <map>
 #include "MyClasses/king.h"

@@ -37,7 +37,7 @@ color: rgb(255, 0, 0);
        <property name="styleSheet">
         <string notr="true">border-image: url(:/Pictures/Game/Background.png);
 background: transparent;
-color: rgb(255, 255, 255);</string>
+color: rgb(255, 255, 0);</string>
        </property>
        <property name="text">
         <string>Score</string>
@@ -48,6 +48,7 @@ color: rgb(255, 255, 255);</string>
       <widget class="QLabel" name="ScoreLabel">
        <property name="styleSheet">
         <string notr="true">border-image: url(:/Pictures/Game/Background.png);
+color: rgb(0, 170, 0);
 background: transparent;</string>
        </property>
        <property name="text">
@@ -84,6 +85,18 @@ background: transparent;</string>
         </size>
        </property>
       </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="Exit">
+       <property name="styleSheet">
+        <string notr="true">border-image: url(:/Pictures/Game/Background.png);
+background: transparent;
+color: rgb(255, 0, 0);</string>
+       </property>
+       <property name="text">
+        <string>Exit</string>
+       </property>
+      </widget>
      </item>
      <item>
       <widget class="QPushButton" name="Stop">
@@ -288,8 +301,8 @@ background: transparent;</string>
        </property>
        <property name="styleSheet">
         <string notr="true">border-image: url(:/Pictures/Game/Background.png);
-color: rgb(255, 255, 255);
-background: transparent;</string>
+background: transparent;
+color: rgb(255, 85, 0);</string>
        </property>
        <property name="text">
         <string>Pause</string>
@@ -836,6 +849,12 @@ background: transparent;</string>
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
+              <property name="minimumSize">
+               <size>
+                <width>70</width>
+                <height>105</height>
+               </size>
+              </property>
               <property name="maximumSize">
                <size>
                 <width>70</width>
@@ -881,8 +900,8 @@ background: transparent;</string>
              <widget class="QPushButton" name="Card3">
               <property name="minimumSize">
                <size>
-                <width>60</width>
-                <height>90</height>
+                <width>70</width>
+                <height>105</height>
                </size>
               </property>
               <property name="maximumSize">
@@ -904,8 +923,8 @@ background: transparent;</string>
              <widget class="QPushButton" name="Card4">
               <property name="minimumSize">
                <size>
-                <width>60</width>
-                <height>90</height>
+                <width>70</width>
+                <height>105</height>
                </size>
               </property>
               <property name="maximumSize">
@@ -927,8 +946,8 @@ background: transparent;</string>
              <widget class="QPushButton" name="Card5">
               <property name="minimumSize">
                <size>
-                <width>60</width>
-                <height>90</height>
+                <width>70</width>
+                <height>105</height>
                </size>
               </property>
               <property name="maximumSize">
@@ -948,6 +967,12 @@ background: transparent;</string>
             </item>
             <item>
              <widget class="QPushButton" name="Card6">
+              <property name="minimumSize">
+               <size>
+                <width>70</width>
+                <height>105</height>
+               </size>
+              </property>
               <property name="maximumSize">
                <size>
                 <width>70</width>
@@ -965,6 +990,12 @@ background: transparent;</string>
             </item>
             <item>
              <widget class="QPushButton" name="Card7">
+              <property name="minimumSize">
+               <size>
+                <width>70</width>
+                <height>105</height>
+               </size>
+              </property>
               <property name="maximumSize">
                <size>
                 <width>70</width>
@@ -982,6 +1013,12 @@ background: transparent;</string>
             </item>
             <item>
              <widget class="QPushButton" name="Card8">
+              <property name="minimumSize">
+               <size>
+                <width>70</width>
+                <height>105</height>
+               </size>
+              </property>
               <property name="maximumSize">
                <size>
                 <width>70</width>
@@ -999,6 +1036,12 @@ background: transparent;</string>
             </item>
             <item>
              <widget class="QPushButton" name="Card9">
+              <property name="minimumSize">
+               <size>
+                <width>70</width>
+                <height>105</height>
+               </size>
+              </property>
               <property name="maximumSize">
                <size>
                 <width>70</width>
@@ -1016,6 +1059,12 @@ background: transparent;</string>
             </item>
             <item>
              <widget class="QPushButton" name="Card10">
+              <property name="minimumSize">
+               <size>
+                <width>70</width>
+                <height>105</height>
+               </size>
+              </property>
               <property name="maximumSize">
                <size>
                 <width>70</width>
@@ -1033,6 +1082,12 @@ background: transparent;</string>
             </item>
             <item>
              <widget class="QPushButton" name="Card11">
+              <property name="minimumSize">
+               <size>
+                <width>70</width>
+                <height>105</height>
+               </size>
+              </property>
               <property name="maximumSize">
                <size>
                 <width>70</width>
@@ -1050,6 +1105,12 @@ background: transparent;</string>
             </item>
             <item>
              <widget class="QPushButton" name="Card12">
+              <property name="minimumSize">
+               <size>
+                <width>70</width>
+                <height>105</height>
+               </size>
+              </property>
               <property name="maximumSize">
                <size>
                 <width>70</width>
@@ -1067,6 +1128,12 @@ background: transparent;</string>
             </item>
             <item>
              <widget class="QPushButton" name="Card13">
+              <property name="minimumSize">
+               <size>
+                <width>70</width>
+                <height>105</height>
+               </size>
+              </property>
               <property name="maximumSize">
                <size>
                 <width>70</width>
@@ -1084,6 +1151,12 @@ background: transparent;</string>
             </item>
             <item>
              <widget class="QPushButton" name="Card14">
+              <property name="minimumSize">
+               <size>
+                <width>70</width>
+                <height>105</height>
+               </size>
+              </property>
               <property name="maximumSize">
                <size>
                 <width>70</width>

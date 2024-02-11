@@ -6,9 +6,21 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>494</width>
-    <height>296</height>
+    <width>700</width>
+    <height>400</height>
    </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>700</width>
+    <height>400</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>700</width>
+    <height>400</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>Client</string>
@@ -71,7 +83,7 @@ color: rgb(219, 182, 49);</string>
      <item>
       <widget class="QLineEdit" name="Ip">
        <property name="sizePolicy">
-        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+        <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
@@ -107,6 +119,12 @@ color: rgb(219, 182, 49);</string>
      </item>
      <item>
       <widget class="QLabel" name="Status">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
        <property name="styleSheet">
         <string notr="true">border-image: url(:/Pictures/Game/Background.png);
 background: transparent;

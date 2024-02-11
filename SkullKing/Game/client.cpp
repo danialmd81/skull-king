@@ -32,7 +32,7 @@ void Client::on_Connect_clicked()
     if (socket->waitForConnected(3000))
     {
         QMessageBox::information(this, "Connected", "Connected to Server");
-        ui->Status->setText("Waiting for Opponent(s) Connection to Server...");
+        ui->Status->setText("Waiting for Opponent(s) Connection");
         ui->Connect->hide();
         emit connected_to_server();
         return;
@@ -85,6 +85,11 @@ void Client::readSocket()
             else if (signal == "play_card")
             {
                 emit play_card();
+                return;
+            }
+            else if (signal == "pause")
+            {
+                emit pause();
                 return;
             }
         }

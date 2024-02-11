@@ -58,10 +58,9 @@ Game::Game(King *king, QWidget *parent) : QDialog(parent), ui(new Ui::Game)
     connect(client, &Client::start_game, this, &Game::StartGame);
     connect(client, &Client::start_round, this, &Game::StartRound);
     connect(client, &Client::play_card, this, &Game::PlayCard);
+    connect(client, &Client::pause, this, Game::Pause);
     client->show();
     client->setModal(true);
-    // GameStart("start.txt");//it's for testing
-    // StartRound();//it's for testing
 }
 
 Game::~Game()
@@ -329,6 +328,7 @@ void Game::card_clicked()
 {
     QPushButton *selected_card = reinterpret_cast<QPushButton *>(sender());
     auto card = king_cards.find(selected_card);
+    QMessageBox *box;
 
     if (turn)
     {
@@ -341,6 +341,7 @@ void Game::card_clicked()
             k_card = card->second;
             turn = false;
             client->sendFile("card.txt", "play_card");
+            box = new QMessageBox;
         }
         else if (ui->KingCard->isHidden() && !ui->OpponentCard->isHidden()) // for second player
         {
@@ -350,9 +351,12 @@ void Game::card_clicked()
                 selected_card->hide();
                 card->second->played_re() = true;
                 card->second->save();
-                QMessageBox::information(this, "Loose a Hand", "You Loosed this Hand");
+                box = new QMessageBox(QMessageBox::Information, "Loosed", "You Loosed this Hand", QMessageBox::NoButton, this);
+                box->setStyleSheet("border-image:none;");
+                QTimer::singleShot(1000, box, &QMessageBox::accept);
+                box->exec();
             }
-            else if (card->second->compare(*op_card) == 0)
+            else if (card->second->compare(*op_card) == 0) // this rule is't working properly
             {
                 auto it = std::find(king->hand().begin(), king->hand().end(), *op_card);
                 if (it == king->hand().end())
@@ -361,13 +365,19 @@ void Game::card_clicked()
                     selected_card->hide();
                     card->second->played_re() = true;
                     card->second->save();
-                    QMessageBox::information(this, "Loose a Hand", "You Loosed this Hand");
+                    box = new QMessageBox(QMessageBox::Information, "Loosed", "You Loosed this Hand", QMessageBox::NoButton, this);
+                    box->setStyleSheet("border-image:none;");
+                    QTimer::singleShot(1000, box, &QMessageBox::accept);
+                    box->exec();
                 }
                 else
                 {
                     if (!it->played_re())
                     {
-                        QMessageBox::critical(this, "Wrong Choose", "Choose Wisly");
+                        box = new QMessageBox(QMessageBox::Critical, "Wrong Choice", "Choose Wisly", QMessageBox::NoButton, this);
+                        box->setStyleSheet("border-image:none;");
+                        QTimer::singleShot(1000, box, &QMessageBox::accept);
+                        box->exec();
                         return;
                     }
                     else
@@ -376,7 +386,10 @@ void Game::card_clicked()
                         selected_card->hide();
                         card->second->played_re() = true;
                         card->second->save();
-                        QMessageBox::information(this, "Loose a Hand", "You Loosed this Hand");
+                        box = new QMessageBox(QMessageBox::Information, "Loose a Hand", "You Loosed this Hand", QMessageBox::NoButton, this);
+                        box->setStyleSheet("border-image:none;");
+                        QTimer::singleShot(1000, box, &QMessageBox::accept);
+                        box->exec();
                     }
                 }
             }
@@ -387,7 +400,10 @@ void Game::card_clicked()
                 card->second->played_re() = true;
                 card->second->save();
                 // winning_card++;
-                QMessageBox::information(this, "Win a Hand", "You Won this Hand");
+                box = new QMessageBox(QMessageBox::Information, "Won", "You Won this Hand", QMessageBox::NoButton, this);
+                box->setStyleSheet("border-image:none;");
+                QTimer::singleShot(1000, box, &QMessageBox::accept);
+                box->exec();
             }
             else if (card->second->compare(*op_card) == 2)
             {
@@ -395,11 +411,17 @@ void Game::card_clicked()
                 selected_card->hide();
                 card->second->played_re() = true;
                 card->second->save();
-                QMessageBox::information(this, "Loose a Hand", "You Loosed this Hand");
+                box = new QMessageBox(QMessageBox::Information, "Loosed", "You Loosed this Hand", QMessageBox::NoButton, this);
+                box->setStyleSheet("border-image:none;");
+                QTimer::singleShot(1000, box, &QMessageBox::accept);
+                box->exec();
             }
             else
             {
-                QMessageBox::critical(this, "Wrong Choose", "Choose Wisly");
+                box = new QMessageBox(QMessageBox::Critical, "Wrong Choice", "Choose Wisly", QMessageBox::NoButton, this);
+                box->setStyleSheet("border-image:none;");
+                QTimer::singleShot(1000, box, &QMessageBox::accept);
+                box->exec();
                 return;
             }
             unset_card(ui->KingCard);
@@ -417,8 +439,12 @@ void Game::card_clicked()
     }
     else
     {
-        QMessageBox::critical(this, "Turn", "It is not your turn");
+        box = new QMessageBox(QMessageBox::Critical, "Turn", "It is not your turn", QMessageBox::NoButton, this);
+        box->setStyleSheet("border-image:none;");
+        QTimer::singleShot(1000, box, &QMessageBox::accept);
+        box->exec();
     }
+    delete box;
 }
 
 void Game::PlayCard()
@@ -430,33 +456,43 @@ void Game::PlayCard()
     backCard_handling();
     if (!ui->KingCard->isHidden())
     {
+        QMessageBox *box;
         if (k_card->compare(*op_card) == -1)
         {
-            QMessageBox::information(this, "Loose a Hand", "You Loosed this Hand");
+            box = new QMessageBox(QMessageBox::Information, "Loosed", "You Loosed this Hand", QMessageBox::NoButton, this);
+            box->setStyleSheet("border-image:none;");
+            QTimer::singleShot(1000, box, &QMessageBox::accept);
+            box->exec();
         }
         else if (k_card->compare(*op_card) == 0) // should check
         {
             // winning_card++;
-            QMessageBox::information(this, "Win a Hand", "You Won this Hand");
+            box = new QMessageBox(QMessageBox::Information, "Won", "You Won this Hand", QMessageBox::NoButton, this);
+            box->setStyleSheet("border-image:none;");
+            QTimer::singleShot(1000, box, &QMessageBox::accept);
+            box->exec();
         }
 
         else if (k_card->compare(*op_card) == 1)
         {
             // winning_card++;
-            QMessageBox::information(this, "Win a Hand", "You Won this Hand");
+            box = new QMessageBox(QMessageBox::Information, "Won", "You Won this Hand", QMessageBox::NoButton, this);
+            box->setStyleSheet("border-image:none;");
+            QTimer::singleShot(1000, box, &QMessageBox::accept);
+            box->exec();
         }
         else if (k_card->compare(*op_card) == 2)
         {
             // winning_card++;
-            QMessageBox::information(this, "Win a Hand", "You Won this Hand");
-        }
-        else
-        {
-            QMessageBox::critical(this, "Wrong Choose", "Choose Wisly");
+            box = new QMessageBox(QMessageBox::Information, "Won", "You Won this Hand", QMessageBox::NoButton, this);
+            box->setStyleSheet("border-image:none;");
+            QTimer::singleShot(1000, box, &QMessageBox::accept);
+            box->exec();
         }
         unset_card(ui->KingCard);
         unset_card(ui->OpponentCard);
         delete op_card;
+        delete box;
         // proces score here
         if (is_all_king_cards_played())
         {
@@ -465,7 +501,63 @@ void Game::PlayCard()
     }
 }
 
+void Game::Pause()
+{
+    QMessageBox box;
+    box.setText("This closes in 20 seconds");
+    box.addButton("Resume", QMessageBox::ButtonRole::AcceptRole);
+    box.setWindowIcon(this->windowIcon());
+    int cnt = 20;
+
+    QTimer cntDown;
+    QObject::connect(&cntDown, &QTimer::timeout, [&box, &cnt, &cntDown]() -> void
+                     {
+                         if(cnt < 0)
+                         {
+                             cntDown.stop();
+                             box.close();
+                         } 
+                         else 
+                         {
+                            box.setText(QString("This closes in %1 seconds").arg(cnt));
+                            cnt--;
+                         } });
+    cntDown.start(1000);
+    box.exec();
+}
+
 void Game::on_Stop_clicked()
+{
+    client->sendSignal("pause");
+    int static num = 0;
+    if (num < 2)
+    {
+        QMessageBox box;
+        box.setText("This closes in 20 seconds");
+        box.addButton("Resume", QMessageBox::ButtonRole::AcceptRole);
+        box.setWindowIcon(this->windowIcon());
+        int cnt = 20;
+
+        QTimer cntDown;
+        QObject::connect(&cntDown, &QTimer::timeout, [&box, &cnt, &cntDown]() -> void
+                         {
+                         if(cnt < 0)
+                         {
+                             cntDown.stop();
+                             box.close();
+                         } 
+                         else 
+                         {
+                            box.setText(QString("This closes in %1 seconds").arg(cnt));
+                            cnt--;
+                         } });
+        cntDown.start(1000);
+        box.exec();
+        num++;
+    }
+}
+
+void Game::on_Exit_clicked()
 {
 }
 

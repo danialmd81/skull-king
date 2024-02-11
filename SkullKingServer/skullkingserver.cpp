@@ -267,9 +267,8 @@ void SkullKingServer::readSocket()
             num++;
             if (num == client_number)
             {
-                QThread::msleep(3000);
                 round = 1;
-                start_round();
+                QTimer::singleShot(3000, this, &SkullKingServer::start_round);
             }
         }
         else if (signal == "next_round")
@@ -279,6 +278,16 @@ void SkullKingServer::readSocket()
             {
                 round_num = 0;
                 start_round();
+            }
+        }
+        else if (signal == "pause")
+        {
+            for (auto &&i : clients)
+            {
+                if (i.first != socket)
+                {
+                    sendSignal(i.first, "pause");
+                }
             }
         }
         else

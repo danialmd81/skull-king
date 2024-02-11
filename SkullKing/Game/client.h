@@ -27,12 +27,12 @@ public:
 
 signals:
     void newSignal(QString);
-    void cancel(std::string);
 
     void connected_to_server();
     void start_game(std::string filepath);
     void start_round();
     void play_card();
+    void pause();
     void end_game();
 
 private slots:
