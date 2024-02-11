@@ -59,6 +59,7 @@ Game::Game(King *king, QWidget *parent) : QDialog(parent), ui(new Ui::Game)
     connect(client, &Client::start_round, this, &Game::StartRound);
     connect(client, &Client::play_card, this, &Game::PlayCard);
     connect(client, &Client::pause, this, Game::Pause);
+    connect(client, Client::resume, this, Game::Resume);
     client->show();
     client->setModal(true);
 }
@@ -328,7 +329,6 @@ void Game::card_clicked()
 {
     QPushButton *selected_card = reinterpret_cast<QPushButton *>(sender());
     auto card = king_cards.find(selected_card);
-    QMessageBox *box;
 
     if (turn)
     {
@@ -456,7 +456,6 @@ void Game::PlayCard()
     backCard_handling();
     if (!ui->KingCard->isHidden())
     {
-        QMessageBox *box;
         if (k_card->compare(*op_card) == -1)
         {
             box = new QMessageBox(QMessageBox::Information, "Loosed", "You Loosed this Hand", QMessageBox::NoButton, this);
@@ -503,57 +502,56 @@ void Game::PlayCard()
 
 void Game::Pause()
 {
-    QMessageBox box;
-    box.setText("This closes in 20 seconds");
-    box.addButton("Resume", QMessageBox::ButtonRole::AcceptRole);
-    box.setWindowIcon(this->windowIcon());
-    int cnt = 20;
+    box = new QMessageBox;
+    box->setText("Paused");
+    // box->setStandardButtons(QMessageBox::NoButton);
+    box->setWindowIcon(this->windowIcon());
+    box->exec();
+}
 
-    QTimer cntDown;
-    QObject::connect(&cntDown, &QTimer::timeout, [&box, &cnt, &cntDown]() -> void
-                     {
-                         if(cnt < 0)
-                         {
-                             cntDown.stop();
-                             box.close();
-                         } 
-                         else 
-                         {
-                            box.setText(QString("This closes in %1 seconds").arg(cnt));
-                            cnt--;
-                         } });
-    cntDown.start(1000);
-    box.exec();
+void Game::Resume()
+{
+    box->close();
+    delete box;
 }
 
 void Game::on_Stop_clicked()
 {
-    client->sendSignal("pause");
     int static num = 0;
     if (num < 2)
     {
-        QMessageBox box;
-        box.setText("This closes in 20 seconds");
-        box.addButton("Resume", QMessageBox::ButtonRole::AcceptRole);
-        box.setWindowIcon(this->windowIcon());
-        int cnt = 20;
+        client->sendSignal("pause");
+        box = new QMessageBox;
+        box->setText("This closes in 20 seconds");
+        box->addButton("Resume", QMessageBox::ButtonRole::AcceptRole);
+        box->setWindowIcon(this->windowIcon());
+        connect(box, &QMessageBox::accepted,
+                [&]()
+                {
+                    client->sendSignal("resume");
+                });
 
+        int cnt = 20;
         QTimer cntDown;
-        QObject::connect(&cntDown, &QTimer::timeout, [&box, &cnt, &cntDown]() -> void
-                         {
-                         if(cnt < 0)
-                         {
-                             cntDown.stop();
-                             box.close();
-                         } 
-                         else 
-                         {
-                            box.setText(QString("This closes in %1 seconds").arg(cnt));
-                            cnt--;
-                         } });
+
+        connect(&cntDown, &QTimer::timeout,
+                [&]()
+                {
+                    if (cnt < 0)
+                    {
+                        cntDown.stop();
+                        box->accept();
+                    }
+                    else
+                    {
+                        box->setText(QString("This closes in %1 seconds").arg(cnt));
+                        cnt--;
+                    }
+                });
         cntDown.start(1000);
-        box.exec();
+        box->exec();
         num++;
+        delete box;
     }
 }
 

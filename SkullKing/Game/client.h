@@ -33,6 +33,7 @@ signals:
     void start_round();
     void play_card();
     void pause();
+    void resume();
     void end_game();
 
 private slots:

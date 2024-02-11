@@ -290,6 +290,16 @@ void SkullKingServer::readSocket()
                 }
             }
         }
+        else if (signal == "resume")
+        {
+            for (auto &&i : clients)
+            {
+                if (i.first != socket)
+                {
+                    sendSignal(i.first, "resume");
+                }
+            }
+        }
         else
         {
         }

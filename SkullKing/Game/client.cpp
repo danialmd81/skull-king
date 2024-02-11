@@ -87,11 +87,6 @@ void Client::readSocket()
                 emit play_card();
                 return;
             }
-            else if (signal == "pause")
-            {
-                emit pause();
-                return;
-            }
         }
         else
             QMessageBox::critical(this, "QTCPServer", "An error occurred while trying to write the attachment.");
@@ -99,10 +94,16 @@ void Client::readSocket()
     else if (fileType == "signal")
     {
         QString signal(buffer.toStdString().c_str());
-        // if (signal == "already_connected") // delete this
-        // {
-        //     return;
-        // }
+        if (signal == "pause")
+        {
+            emit pause();
+            return;
+        }
+        else if (signal == "resume")
+        {
+            emit resume();
+            return;
+        }
     }
 }
 
