@@ -90,90 +90,6 @@ void SkullKingServer::appendToSocketList(QTcpSocket *socket)
     connect(socket, &QTcpSocket::errorOccurred, this, &SkullKingServer::displayError);
 }
 
-void SkullKingServer::readSocket()
-{
-    QTcpSocket *socket = reinterpret_cast<QTcpSocket *>(sender());
-
-    QByteArray buffer;
-
-    QDataStream socketStream(socket);
-    socketStream.setVersion(QDataStream::Qt_6_5);
-
-    socketStream.startTransaction();
-    socketStream >> buffer;
-
-    if (!socketStream.commitTransaction())
-    {
-        return;
-    }
-    QString header = buffer.mid(0, 128);
-
-    QString fileType = header.split(",")[0].split(":")[1];
-
-    buffer = buffer.mid(128);
-
-    if (fileType == "file")
-    {
-        QString fileName = header.split(",")[1].split(":")[1];
-        QString ext = fileName.split(".")[1];
-        QString message = header.split(",")[2].split(":")[1];
-        QString size = header.split(",")[3].split(":")[1].split(";")[0];
-        QString filePath = fileName;
-        QFile file(filePath);
-        if (file.open(QIODevice::WriteOnly))
-        {
-            file.write(buffer);
-            file.close();
-            if (message == "king")
-            {
-                static int num = 0;
-                King king;
-                king.load(fileName.toStdString());
-                clients.at(socket) = king;
-                num++;
-                if (num == client_number)
-                {
-                    // this->hide();
-                    start_game();
-                }
-            }
-            else if (message == "play_card")
-            {
-                play_card(socket);
-            }
-        }
-        else
-            QMessageBox::critical(this, "QTCPServer", "An error occurred while trying to write the attachment.");
-    }
-    else if (fileType == "signal")
-    {
-        QString signal(buffer.toStdString().c_str());
-        if (signal == "start_game_ended")
-        {
-            static int num = 0;
-            num++;
-            if (num == client_number)
-            {
-                QThread::msleep(3000);
-                round = 1;
-                start_round();
-                num = 0;
-            }
-        }
-        else if (signal == "next_round")
-        {
-            static int num = 0;
-            num++;
-            if (num == client_number)
-            {
-                num = 0;
-                round++;
-                start_round();
-            }
-        }
-    }
-}
-
 void SkullKingServer::discardSocket()
 {
     QTcpSocket *socket = reinterpret_cast<QTcpSocket *>(sender());
@@ -208,7 +124,7 @@ void SkullKingServer::displayError(QAbstractSocket::SocketError socketError)
     }
 }
 
-void SkullKingServer::sendSignal(QTcpSocket *socket, QString signal)
+bool SkullKingServer::sendSignal(QTcpSocket *socket, QString signal)
 {
     if (socket)
     {
@@ -223,15 +139,22 @@ void SkullKingServer::sendSignal(QTcpSocket *socket, QString signal)
             byteArray.prepend(header);
             socketStream.setVersion(QDataStream::Qt_6_5);
             socketStream << byteArray;
+            return true;
         }
         else
-            QMessageBox::critical(this, "QTCPServer", "Socket doesn't seem to be opened");
+        {
+            // QMessageBox::critical(this, "QTCPServer", "Socket doesn't seem to be opened");
+            return false;
+        }
     }
     else
-        QMessageBox::critical(this, "QTCPServer", "Not connected");
+    {
+        // QMessageBox::critical(this, "QTCPServer", "Not connected");
+        return false;
+    }
 }
 
-void SkullKingServer::sendFile(QTcpSocket *socket, QString filePath, QString signal)
+bool SkullKingServer::sendFile(QTcpSocket *socket, QString filePath, QString signal)
 {
     if (socket)
     {
@@ -246,24 +169,122 @@ void SkullKingServer::sendFile(QTcpSocket *socket, QString filePath, QString sig
                 QDataStream socketStream(socket);
                 socketStream.setVersion(QDataStream::Qt_6_5);
                 QByteArray header;
-                header.prepend(QString("fileType:file,fileName:%1,signal:%2,fileSize:%3;")
-                                   .arg(fileName)
-                                   .arg(signal)
-                                   .arg(m_file.size())
-                                   .toUtf8());
+                header.prepend(QString("fileType:file,fileName:%1,signal:%2,fileSize:%3;").arg(fileName).arg(signal).arg(m_file.size()).toUtf8());
                 header.resize(128);
                 QByteArray byteArray = m_file.readAll();
                 byteArray.prepend(header);
                 socketStream << byteArray;
+                return true;
             }
             else
-                QMessageBox::critical(this, "QTCPClient", "Couldn't open the attachment!");
+            {
+                // QMessageBox::critical(this, "QTCPClient", "Couldn't open the attachment!");
+                return false;
+            }
         }
         else
-            QMessageBox::critical(this, "QTCPServer", "Socket doesn't seem to be opened");
+        {
+            // QMessageBox::critical(this, "QTCPServer", "Socket doesn't seem to be opened");
+            return false;
+        }
     }
     else
-        QMessageBox::critical(this, "QTCPServer", "Not connected");
+    {
+        // QMessageBox::critical(this, "QTCPServer", "Not connected");
+        return false;
+    }
+}
+
+void SkullKingServer::readSocket()
+{
+    QTcpSocket *socket = reinterpret_cast<QTcpSocket *>(sender());
+    QByteArray buffer;
+
+    QDataStream socketStream(socket);
+    socketStream.setVersion(QDataStream::Qt_6_5);
+
+    socketStream.startTransaction();
+    socketStream >> buffer;
+
+    if (!socketStream.commitTransaction())
+    {
+        return;
+    }
+    QString header = buffer.mid(0, 128);
+
+    QString fileType = header.split(",")[0].split(":")[1];
+
+    buffer = buffer.mid(128);
+
+    static int round_num = 0;
+    if (fileType == "file")
+    {
+        QString fileName = header.split(",")[1].split(":")[1];
+        QString ext = fileName.split(".")[1];
+        QString message = header.split(",")[2].split(":")[1];
+        QString size = header.split(",")[3].split(":")[1].split(";")[0];
+        QString filePath = fileName;
+        QFile file(filePath);
+        if (file.open(QIODevice::WriteOnly))
+        {
+            file.write(buffer);
+            file.close();
+            if (message == "king")
+            {
+                static int num = 0;
+                King king;
+                king.load(fileName.toStdString());
+                clients.at(socket) = king;
+                num++;
+                if (num == client_number)
+                {
+                    // this->hide();
+                    start_game();
+                }
+            }
+            else if (message == "play_card")
+            {
+                play_card(socket);
+            }
+            else if (message == "next_round")
+            {
+                play_card(socket);
+                round_num++;
+            }
+            else
+            {
+            }
+        }
+        else
+            QMessageBox::critical(this, "QTCPServer", "An error occurred while trying to write the attachment.");
+    }
+    else if (fileType == "signal")
+    {
+        QString signal(buffer.toStdString().c_str());
+        if (signal == "start_game_ended")
+        {
+            static int num = 0;
+            num++;
+            if (num == client_number)
+            {
+                QThread::msleep(3000);
+                round = 1;
+                start_round();
+            }
+        }
+        else if (signal == "next_round")
+        {
+            round_num++;
+            if (round_num == client_number)
+            {
+                round_num = 0;
+                start_round();
+            }
+        }
+        else
+        {
+        }
+    }
 }
 
 void SkullKingServer::start_game()
@@ -297,6 +318,7 @@ void SkullKingServer::start_round()
         sendFile(king.first, king.second.filePath().c_str(), "start_round");
     }
     deck.reset();
+    round++;
 }
 
 void SkullKingServer::play_card(QTcpSocket *qts)

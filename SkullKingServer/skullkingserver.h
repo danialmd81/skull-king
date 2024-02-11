@@ -39,8 +39,8 @@ private slots:
     void discardSocket();
     void displayError(QAbstractSocket::SocketError socketError);
 
-    void sendSignal(QTcpSocket *socket, QString signal);
-    void sendFile(QTcpSocket *socket, QString filePath, QString signal);
+    bool sendSignal(QTcpSocket *socket, QString signal);
+    bool sendFile(QTcpSocket *socket, QString filePath, QString signal);
 
     void start_game();
     void start_round();

@@ -45,7 +45,7 @@ void Client::on_Connect_clicked()
     // }
 }
 
-void Client::readSocket() //
+void Client::readSocket()
 {
     QByteArray buffer;
     QDataStream socketStream(socket);
@@ -94,10 +94,10 @@ void Client::readSocket() //
     else if (fileType == "signal")
     {
         QString signal(buffer.toStdString().c_str());
-        if (signal == "already_connected") // delete this
-        {
-            return;
-        }
+        // if (signal == "already_connected") // delete this
+        // {
+        //     return;
+        // }
     }
 }
 
@@ -129,7 +129,7 @@ void Client::displayError(QAbstractSocket::SocketError socketError) // Okay
     }
 }
 
-void Client::sendSignal(QString signal) // Okay
+bool Client::sendSignal(QString signal) // Okay
 {
     if (socket)
     {
@@ -143,15 +143,22 @@ void Client::sendSignal(QString signal) // Okay
             QByteArray byteArray = signal.toUtf8();
             byteArray.prepend(header);
             socketStream << byteArray;
+            return true;
         }
         else
-            QMessageBox::critical(this, "QTCPClient", "Socket doesn't seem to be opened");
+        {
+            // QMessageBox::critical(this, "QTCPClient", "Socket doesn't seem to be opened");
+            return false;
+        }
     }
     else
-        QMessageBox::critical(this, "QTCPClient", "Not connected");
+    {
+        // QMessageBox::critical(this, "QTCPClient", "Not connected");
+        return false;
+    }
 }
 
-void Client::sendFile(QString filePath, QString signal) // Okay
+bool Client::sendFile(QString filePath, QString signal) // Okay
 {
     if (socket)
     {
@@ -159,8 +166,8 @@ void Client::sendFile(QString filePath, QString signal) // Okay
         {
             if (filePath.isEmpty())
             {
-                QMessageBox::critical(this, "QTCPClient", "You haven't selected any attachment!");
-                return;
+                // QMessageBox::critical(this, "QTCPClient", "You haven't selected any attachment!");
+                return false;
             }
             QFile m_file(filePath);
             if (m_file.open(QIODevice::ReadOnly))
@@ -177,13 +184,23 @@ void Client::sendFile(QString filePath, QString signal) // Okay
                 byteArray.prepend(header);
                 socketStream.setVersion(QDataStream::Qt_6_5);
                 socketStream << byteArray;
+                return true;
             }
             else
-                QMessageBox::critical(this, "QTCPClient", "Attachment is not readable!");
+            {
+                // QMessageBox::critical(this, "QTCPClient", "Attachment is not readable!");
+                return false;
+            }
         }
         else
-            QMessageBox::critical(this, "QTCPClient", "Socket doesn't seem to be opened");
+        {
+            // QMessageBox::critical(this, "QTCPClient", "Socket doesn't seem to be opened");
+            return false;
+        }
     }
     else
-        QMessageBox::critical(this, "QTCPClient", "Not connected");
+    {
+        // QMessageBox::critical(this, "QTCPClient", "Not connected");
+        return false;
+    }
 }

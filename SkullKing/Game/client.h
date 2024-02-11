@@ -22,16 +22,14 @@ class Client : public QDialog
 public:
     explicit Client(QWidget *parent = nullptr);
     ~Client();
-    void sendSignal(QString signal);
-    void sendFile(QString filePath, QString signal);
+    bool sendSignal(QString signal);
+    bool sendFile(QString filePath, QString signal);
 
 signals:
     void newSignal(QString);
     void cancel(std::string);
-    void connected_to_server();
-    void other_king_of_client(QString);
-    void kings_ready();
 
+    void connected_to_server();
     void start_game(std::string filepath);
     void start_round();
     void play_card();

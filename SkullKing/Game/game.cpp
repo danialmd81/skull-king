@@ -7,7 +7,6 @@ Game::Game(King *king, QWidget *parent) : QDialog(parent), ui(new Ui::Game)
     this->king = new King(*king);
     op_card = nullptr;
     ui->setupUi(this);
-    // this->setCursor(QCursor(QPixmap(":/Resource/Game/cursor.png")));
     ui->KingName->setText(king->username().c_str());
     connect(ui->Card1, &QPushButton::clicked, this, &Game::card_clicked);
     connect(ui->Card2, &QPushButton::clicked, this, &Game::card_clicked);
@@ -65,35 +64,14 @@ Game::Game(King *king, QWidget *parent) : QDialog(parent), ui(new Ui::Game)
     // StartRound();//it's for testing
 }
 
+Game::~Game()
+{
+    delete ui;
+}
+
 void Game::connected_to_server()
 {
     client->sendFile(king->filePath().c_str(), "king");
-}
-
-void Game::set_card(QPushButton *button, Card card)
-{
-    button->show();
-    string styleSheet_str("border-image: url(:/Resource/Cards/");
-    button->setStyleSheet((styleSheet_str + card.filepath() + ");").c_str());
-}
-
-void Game::set_card(QLabel *label, Card card)
-{
-    label->show();
-    string styleSheet_str("border-image: url(:/Resource/Cards/");
-    label->setStyleSheet((styleSheet_str + card.filepath() + ");").c_str());
-}
-
-void Game::unset_card(QPushButton *button)
-{
-    button->setStyleSheet("border-image:none;");
-    button->hide();
-}
-
-void Game::unset_card(QLabel *label)
-{
-    label->setStyleSheet("border-image:none;");
-    label->hide();
 }
 
 void Game::StartGame(string filepath) // for more than 2 players u need to change this function.
@@ -136,16 +114,13 @@ void Game::StartGame(string filepath) // for more than 2 players u need to chang
 void Game::StartRound()
 {
     king->reset_hand();
-    king->load(); // it's for real
+    king_cards.clear();
+    king->load();
     unset_card(ui->KingCard);
     unset_card(ui->OpponentCard);
     int round = king->hand().size() / 2;
-    for (auto &&i : king->hand())
-    {
-        i.undelete_it();
-    }
     sort(king->hand().begin(), king->hand().end());
-    // turn = true; // it's for testing
+
     if (round == 1)
     {
         set_card(ui->Card1, king->hand().at(0));
@@ -154,7 +129,6 @@ void Game::StartRound()
         ui->BackCard_2->show();
         king_cards.insert(pair(ui->Card1, &king->hand().at(0)));
         king_cards.insert(pair(ui->Card2, &king->hand().at(1)));
-        // play_card(); // it's for testing
     }
     else if (round == 2)
     {
@@ -192,6 +166,150 @@ void Game::StartRound()
         king_cards.insert(pair(ui->Card5, &king->hand().at(4)));
         king_cards.insert(pair(ui->Card6, &king->hand().at(5)));
     }
+    else if (round == 4)
+    {
+        set_card(ui->Card1, king->hand().at(0));
+        set_card(ui->Card2, king->hand().at(1));
+        set_card(ui->Card3, king->hand().at(2));
+        set_card(ui->Card4, king->hand().at(3));
+        set_card(ui->Card5, king->hand().at(4));
+        set_card(ui->Card6, king->hand().at(5));
+        set_card(ui->Card7, king->hand().at(6));
+        set_card(ui->Card8, king->hand().at(7));
+        ui->BackCard_1->show();
+        ui->BackCard_2->show();
+        ui->BackCard_3->show();
+        ui->BackCard_4->show();
+        ui->BackCard_5->show();
+        ui->BackCard_6->show();
+        ui->BackCard_7->show();
+        ui->BackCard_8->show();
+        king_cards.insert(pair(ui->Card1, &king->hand().at(0)));
+        king_cards.insert(pair(ui->Card2, &king->hand().at(1)));
+        king_cards.insert(pair(ui->Card3, &king->hand().at(2)));
+        king_cards.insert(pair(ui->Card4, &king->hand().at(3)));
+        king_cards.insert(pair(ui->Card5, &king->hand().at(4)));
+        king_cards.insert(pair(ui->Card6, &king->hand().at(5)));
+        king_cards.insert(pair(ui->Card7, &king->hand().at(6)));
+        king_cards.insert(pair(ui->Card8, &king->hand().at(7)));
+    }
+    else if (round == 5)
+    {
+        set_card(ui->Card1, king->hand().at(0));
+        set_card(ui->Card2, king->hand().at(1));
+        set_card(ui->Card3, king->hand().at(2));
+        set_card(ui->Card4, king->hand().at(3));
+        set_card(ui->Card5, king->hand().at(4));
+        set_card(ui->Card6, king->hand().at(5));
+        set_card(ui->Card7, king->hand().at(6));
+        set_card(ui->Card8, king->hand().at(7));
+        set_card(ui->Card9, king->hand().at(8));
+        set_card(ui->Card10, king->hand().at(9));
+        ui->BackCard_1->show();
+        ui->BackCard_2->show();
+        ui->BackCard_3->show();
+        ui->BackCard_4->show();
+        ui->BackCard_5->show();
+        ui->BackCard_6->show();
+        ui->BackCard_7->show();
+        ui->BackCard_8->show();
+        ui->BackCard_9->show();
+        ui->BackCard_10->show();
+        king_cards.insert(pair(ui->Card1, &king->hand().at(0)));
+        king_cards.insert(pair(ui->Card2, &king->hand().at(1)));
+        king_cards.insert(pair(ui->Card3, &king->hand().at(2)));
+        king_cards.insert(pair(ui->Card4, &king->hand().at(3)));
+        king_cards.insert(pair(ui->Card5, &king->hand().at(4)));
+        king_cards.insert(pair(ui->Card6, &king->hand().at(5)));
+        king_cards.insert(pair(ui->Card7, &king->hand().at(6)));
+        king_cards.insert(pair(ui->Card8, &king->hand().at(7)));
+        king_cards.insert(pair(ui->Card9, &king->hand().at(8)));
+        king_cards.insert(pair(ui->Card10, &king->hand().at(9)));
+    }
+    else if (round == 6)
+    {
+        set_card(ui->Card1, king->hand().at(0));
+        set_card(ui->Card2, king->hand().at(1));
+        set_card(ui->Card3, king->hand().at(2));
+        set_card(ui->Card4, king->hand().at(3));
+        set_card(ui->Card5, king->hand().at(4));
+        set_card(ui->Card6, king->hand().at(5));
+        set_card(ui->Card7, king->hand().at(6));
+        set_card(ui->Card8, king->hand().at(7));
+        set_card(ui->Card9, king->hand().at(8));
+        set_card(ui->Card10, king->hand().at(9));
+        set_card(ui->Card11, king->hand().at(10));
+        set_card(ui->Card12, king->hand().at(11));
+        ui->BackCard_1->show();
+        ui->BackCard_2->show();
+        ui->BackCard_3->show();
+        ui->BackCard_4->show();
+        ui->BackCard_5->show();
+        ui->BackCard_6->show();
+        ui->BackCard_7->show();
+        ui->BackCard_8->show();
+        ui->BackCard_9->show();
+        ui->BackCard_10->show();
+        ui->BackCard_11->show();
+        ui->BackCard_12->show();
+        king_cards.insert(pair(ui->Card1, &king->hand().at(0)));
+        king_cards.insert(pair(ui->Card2, &king->hand().at(1)));
+        king_cards.insert(pair(ui->Card3, &king->hand().at(2)));
+        king_cards.insert(pair(ui->Card4, &king->hand().at(3)));
+        king_cards.insert(pair(ui->Card5, &king->hand().at(4)));
+        king_cards.insert(pair(ui->Card6, &king->hand().at(5)));
+        king_cards.insert(pair(ui->Card7, &king->hand().at(6)));
+        king_cards.insert(pair(ui->Card8, &king->hand().at(7)));
+        king_cards.insert(pair(ui->Card9, &king->hand().at(8)));
+        king_cards.insert(pair(ui->Card10, &king->hand().at(9)));
+        king_cards.insert(pair(ui->Card11, &king->hand().at(10)));
+        king_cards.insert(pair(ui->Card12, &king->hand().at(11)));
+    }
+    else if (round == 7)
+    {
+        set_card(ui->Card1, king->hand().at(0));
+        set_card(ui->Card2, king->hand().at(1));
+        set_card(ui->Card3, king->hand().at(2));
+        set_card(ui->Card4, king->hand().at(3));
+        set_card(ui->Card5, king->hand().at(4));
+        set_card(ui->Card6, king->hand().at(5));
+        set_card(ui->Card7, king->hand().at(6));
+        set_card(ui->Card8, king->hand().at(7));
+        set_card(ui->Card9, king->hand().at(8));
+        set_card(ui->Card10, king->hand().at(9));
+        set_card(ui->Card11, king->hand().at(10));
+        set_card(ui->Card12, king->hand().at(11));
+        set_card(ui->Card13, king->hand().at(12));
+        set_card(ui->Card14, king->hand().at(13));
+        ui->BackCard_1->show();
+        ui->BackCard_2->show();
+        ui->BackCard_3->show();
+        ui->BackCard_4->show();
+        ui->BackCard_5->show();
+        ui->BackCard_6->show();
+        ui->BackCard_7->show();
+        ui->BackCard_8->show();
+        ui->BackCard_9->show();
+        ui->BackCard_10->show();
+        ui->BackCard_11->show();
+        ui->BackCard_12->show();
+        ui->BackCard_13->show();
+        ui->BackCard_14->show();
+        king_cards.insert(pair(ui->Card1, &king->hand().at(0)));
+        king_cards.insert(pair(ui->Card2, &king->hand().at(1)));
+        king_cards.insert(pair(ui->Card3, &king->hand().at(2)));
+        king_cards.insert(pair(ui->Card4, &king->hand().at(3)));
+        king_cards.insert(pair(ui->Card5, &king->hand().at(4)));
+        king_cards.insert(pair(ui->Card6, &king->hand().at(5)));
+        king_cards.insert(pair(ui->Card7, &king->hand().at(6)));
+        king_cards.insert(pair(ui->Card8, &king->hand().at(7)));
+        king_cards.insert(pair(ui->Card9, &king->hand().at(8)));
+        king_cards.insert(pair(ui->Card10, &king->hand().at(9)));
+        king_cards.insert(pair(ui->Card11, &king->hand().at(10)));
+        king_cards.insert(pair(ui->Card12, &king->hand().at(11)));
+        king_cards.insert(pair(ui->Card13, &king->hand().at(12)));
+        king_cards.insert(pair(ui->Card14, &king->hand().at(13)));
+    }
 
     // will = new WillWin(round, this);
     // will->setModal(true);
@@ -211,17 +329,18 @@ void Game::card_clicked()
 {
     QPushButton *selected_card = reinterpret_cast<QPushButton *>(sender());
     auto card = king_cards.find(selected_card);
-    // turn = true;//it's for testing
+
     if (turn)
     {
         if (ui->KingCard->isHidden() && ui->OpponentCard->isHidden()) // for first hand play
         {
             set_card(ui->KingCard, *card->second);
             selected_card->hide();
-            card->second->delete_it();
+            card->second->played_re() = true;
             card->second->save();
             k_card = card->second;
             turn = false;
+            client->sendFile("card.txt", "play_card");
         }
         else if (ui->KingCard->isHidden() && !ui->OpponentCard->isHidden()) // for second player
         {
@@ -229,17 +348,24 @@ void Game::card_clicked()
             {
                 set_card(ui->KingCard, *card->second);
                 selected_card->hide();
-                card->second->delete_it();
+                card->second->played_re() = true;
                 card->second->save();
-                turn = false;
                 QMessageBox::information(this, "Loose a Hand", "You Loosed this Hand");
             }
             else if (card->second->compare(*op_card) == 0)
             {
                 auto it = std::find(king->hand().begin(), king->hand().end(), *op_card);
-                if (it != king->hand().end())
+                if (it == king->hand().end())
                 {
-                    if (!it->is_deleted())
+                    set_card(ui->KingCard, *card->second);
+                    selected_card->hide();
+                    card->second->played_re() = true;
+                    card->second->save();
+                    QMessageBox::information(this, "Loose a Hand", "You Loosed this Hand");
+                }
+                else
+                {
+                    if (!it->played_re())
                     {
                         QMessageBox::critical(this, "Wrong Choose", "Choose Wisly");
                         return;
@@ -248,29 +374,18 @@ void Game::card_clicked()
                     {
                         set_card(ui->KingCard, *card->second);
                         selected_card->hide();
-                        card->second->delete_it();
+                        card->second->played_re() = true;
                         card->second->save();
-                        turn = false;
                         QMessageBox::information(this, "Loose a Hand", "You Loosed this Hand");
                     }
-                }
-                else
-                {
-                    set_card(ui->KingCard, *card->second);
-                    selected_card->hide();
-                    card->second->delete_it();
-                    card->second->save();
-                    turn = false;
-                    QMessageBox::information(this, "Loose a Hand", "You Loosed this Hand");
                 }
             }
             else if (card->second->compare(*op_card) == 1)
             {
                 set_card(ui->KingCard, *card->second);
                 selected_card->hide();
-                card->second->delete_it();
+                card->second->played_re() = true;
                 card->second->save();
-                turn = false;
                 // winning_card++;
                 QMessageBox::information(this, "Win a Hand", "You Won this Hand");
             }
@@ -278,9 +393,8 @@ void Game::card_clicked()
             {
                 set_card(ui->KingCard, *card->second);
                 selected_card->hide();
-                card->second->delete_it();
+                card->second->played_re() = true;
                 card->second->save();
-                turn = false;
                 QMessageBox::information(this, "Loose a Hand", "You Loosed this Hand");
             }
             else
@@ -291,27 +405,20 @@ void Game::card_clicked()
             unset_card(ui->KingCard);
             unset_card(ui->OpponentCard);
             delete op_card;
-            if (king->all_cards_is_deleted())
+            turn = false;
+            // proces score here
+            if (is_all_king_cards_played())
             {
-                king_cards.clear();
-                king->reset_hand();
-                // proces score here
-                client->sendSignal("next_round");
+                client->sendFile("card.txt", "next_round");
             }
+            else
+                client->sendFile("card.txt", "play_card");
         }
-        client->sendFile("card.txt", "play_card");
     }
     else
     {
         QMessageBox::critical(this, "Turn", "It is not your turn");
     }
-}
-
-bool Game::is_all_BackCard_hidden()
-{
-    if (ui->BackCard_1->isHidden() && ui->BackCard_2->isHidden() && ui->BackCard_3->isHidden() && ui->BackCard_4->isHidden() && ui->BackCard_5->isHidden() && ui->BackCard_6->isHidden() && ui->BackCard_7->isHidden() && ui->BackCard_8->isHidden() && ui->BackCard_9->isHidden() && ui->BackCard_10->isHidden() && ui->BackCard_11->isHidden() && ui->BackCard_12->isHidden() && ui->BackCard_13->isHidden() && ui->BackCard_14->isHidden())
-        return true;
-    return false;
 }
 
 void Game::PlayCard()
@@ -320,7 +427,8 @@ void Game::PlayCard()
     op_card->load();
     set_card(ui->OpponentCard, *op_card);
     turn = true;
-    if (!ui->KingCard->isHidden() && !ui->OpponentCard->isHidden())
+    backCard_handling();
+    if (!ui->KingCard->isHidden())
     {
         if (k_card->compare(*op_card) == -1)
         {
@@ -345,159 +453,129 @@ void Game::PlayCard()
         else
         {
             QMessageBox::critical(this, "Wrong Choose", "Choose Wisly");
-            return;
         }
         unset_card(ui->KingCard);
         unset_card(ui->OpponentCard);
         delete op_card;
+        // proces score here
+        if (is_all_king_cards_played())
+        {
+            client->sendSignal("next_round");
+        }
     }
+}
+
+void Game::on_Stop_clicked()
+{
+}
+
+void Game::backCard_handling()
+{
     if (!ui->BackCard_1->isHidden())
     {
         ui->BackCard_1->hide();
-        if (is_all_BackCard_hidden())
-        {
-            // proces score here
-            client->sendSignal("next_round");
-        }
         return;
     }
     else if (!ui->BackCard_2->isHidden())
     {
         ui->BackCard_2->hide();
-        if (is_all_BackCard_hidden())
-        {
-            // proces score here
-            client->sendSignal("next_round");
-        }
         return;
     }
     else if (!ui->BackCard_3->isHidden())
     {
         ui->BackCard_3->hide();
-        if (is_all_BackCard_hidden())
-        {
-            // proces score here
-            client->sendSignal("next_round");
-        }
         return;
     }
     else if (!ui->BackCard_4->isHidden())
     {
         ui->BackCard_4->hide();
-        if (is_all_BackCard_hidden())
-        {
-            // proces score here
-            client->sendSignal("next_round");
-        }
         return;
     }
     else if (!ui->BackCard_5->isHidden())
     {
         ui->BackCard_5->hide();
-        if (is_all_BackCard_hidden())
-        {
-            // proces score here
-            client->sendSignal("next_round");
-        }
         return;
     }
     else if (!ui->BackCard_6->isHidden())
     {
         ui->BackCard_6->hide();
-        if (is_all_BackCard_hidden())
-        {
-            // proces score here
-            client->sendSignal("next_round");
-        }
         return;
     }
     else if (!ui->BackCard_7->isHidden())
     {
         ui->BackCard_7->hide();
-        if (is_all_BackCard_hidden())
-        {
-            // proces score here
-            client->sendSignal("next_round");
-        }
         return;
     }
     else if (!ui->BackCard_8->isHidden())
     {
         ui->BackCard_8->hide();
-        if (is_all_BackCard_hidden())
-        {
-            // proces score here
-            client->sendSignal("next_round");
-        }
         return;
     }
     else if (!ui->BackCard_9->isHidden())
     {
         ui->BackCard_9->hide();
-        if (is_all_BackCard_hidden())
-        {
-            // proces score here
-            client->sendSignal("next_round");
-        }
         return;
     }
     else if (!ui->BackCard_10->isHidden())
     {
         ui->BackCard_10->hide();
-        if (is_all_BackCard_hidden())
-        {
-            // proces score here
-            client->sendSignal("next_round");
-        }
         return;
     }
     else if (!ui->BackCard_11->isHidden())
     {
         ui->BackCard_11->hide();
-        if (is_all_BackCard_hidden())
-        {
-            // proces score here
-            client->sendSignal("next_round");
-        }
         return;
     }
     else if (!ui->BackCard_12->isHidden())
     {
         ui->BackCard_12->hide();
-        if (is_all_BackCard_hidden())
-        {
-            // proces score here
-            client->sendSignal("next_round");
-        }
         return;
     }
     else if (!ui->BackCard_13->isHidden())
     {
         ui->BackCard_13->hide();
-        if (is_all_BackCard_hidden())
-        {
-            // proces score here
-            client->sendSignal("next_round");
-        }
         return;
     }
     else if (!ui->BackCard_14->isHidden())
     {
         ui->BackCard_14->hide();
-        if (is_all_BackCard_hidden())
-        {
-            // proces score here
-            client->sendSignal("next_round");
-        }
         return;
     }
 }
 
-Game::~Game()
+bool Game::is_all_king_cards_played()
 {
-    delete ui;
+    bool flag = true;
+    for (auto &&i : king->hand())
+    {
+        if (!i.played_re())
+            flag = false;
+    }
+    return flag;
 }
 
-void Game::on_Stop_clicked()
+void Game::set_card(QPushButton *button, Card card)
 {
+    button->show();
+    string styleSheet_str("border-image: url(:/Resource/Cards/");
+    button->setStyleSheet((styleSheet_str + card.filepath() + ");").c_str());
+}
+
+void Game::set_card(QLabel *label, Card card)
+{
+    label->show();
+    string styleSheet_str("border-image: url(:/Resource/Cards/");
+    label->setStyleSheet((styleSheet_str + card.filepath() + ");").c_str());
+}
+
+void Game::unset_card(QPushButton *button)
+{
+    button->setStyleSheet("border-image:none;");
+    button->hide();
+}
+
+void Game::unset_card(QLabel *label)
+{
+    label->setStyleSheet("border-image:none;");
+    label->hide();
 }

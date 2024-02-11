@@ -130,12 +130,12 @@ void King::reset_hand()
     k_hand.clear();
 }
 
-bool King::all_cards_is_deleted()
+bool King::all_cards_is_played()
 {
     bool flag = true;
     for (auto &&i : k_hand)
     {
-        if (!i.is_deleted())
+        if (!i.played_re())
             flag = false;
     }
     return flag;

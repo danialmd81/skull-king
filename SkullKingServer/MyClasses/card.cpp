@@ -4,10 +4,13 @@ using namespace std;
 
 Card::Card()
 {
+    played = false;
+    deleted = false;
 }
 
 Card::Card(Cards name, int number)
 {
+    played = false;
     deleted = false;
     Name = name;
     if (Name != Cards::Queen && Name != Cards::SkullKing && Name != Cards::Pirate)
@@ -22,7 +25,10 @@ Card::Card(Cards name, int number)
 
 string Card::filepath()
 {
-    return from_Cards_to_string(this->Name) + to_string(Number) + ".png";
+    if (Number != 0)
+        return from_Cards_to_string(this->Name) + to_string(Number) + ".png";
+    else
+        return from_Cards_to_string(this->Name) + ".png";
 }
 
 void Card::save()
@@ -56,7 +62,12 @@ bool Card::is_deleted()
     return deleted;
 }
 
-int Card::compare(Card &card) // -1 ->first loose  | 0 -> check  | 1 -> first win  |  2 -> erly
+bool &Card::played_re()
+{
+    return played;
+}
+
+int Card::compare(Card &card) // -1 ->first loose  | 0 -> check  | 1 -> first win  |  2 -> early is winner
 {
     if (Name == card.Name)
     {
@@ -382,14 +393,14 @@ string from_Cards_to_string(Cards cards)
 
 ostream &operator<<(ostream &out, Card &card)
 {
-    out << card.Name << ' ' << card.Number << ' ' << card.deleted << ' ';
+    out << card.Name << ' ' << card.Number << ' ';
     return out;
 }
 
 istream &operator>>(istream &in, Card &card)
 {
     int cards;
-    in >> cards >> card.Number >> card.deleted;
+    in >> cards >> card.Number;
     card.Name = from_int_to_Cards(cards);
     return in;
 }

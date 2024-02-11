@@ -2,6 +2,7 @@
 #define GAME_H
 
 #include <QDialog>
+#include <QThread>
 #include "MyClasses/king.h"
 #include "MyClasses/card.h"
 #include "Game/client.h"
@@ -40,7 +41,8 @@ private:
     void set_card(QLabel *, Card);
     void unset_card(QPushButton *);
     void unset_card(QLabel *);
-    bool is_all_BackCard_hidden();
+    bool is_all_king_cards_played();
+    void backCard_handling();
 };
 
 #endif // GAME_H

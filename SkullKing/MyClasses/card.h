@@ -24,25 +24,24 @@ class Card
 private:
   Cards Name;
   int Number;
-  bool deleted;
+  bool deleted, played;
 
 public:
   Card();
   Card(Cards name, int number);
   std::string filepath();
+  bool &played_re();
   bool operator<(const Card card) const;
   bool operator==(const Card &card);
   friend ostream &operator<<(ostream &out, Card &card);
   friend istream &operator>>(istream &in, Card &card);
+  
   void delete_it();
   void undelete_it();
   bool is_deleted();
   void save();
   void load();
-  bool check_hand(Card &ground, Card &choose, vector<Card> hand);
   int compare(Card &card);
-  // friend QDataStream &operator<<(QDataStream &out, Card &card);
-  // friend QDataStream &operator>>(QDataStream &in, Card &card);
 };
 
 #endif // CARD_H

@@ -32,7 +32,7 @@ public:
   Card &starter_card();
   vector<Card> &
   hand();
-  bool all_cards_is_deleted();
+  bool all_cards_is_played();
   friend ostream &operator<<(ostream &out, King &king);
   friend istream &operator>>(istream &in, King &king);
 
