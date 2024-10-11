@@ -70,9 +70,9 @@ SkullKingServer/
 
 Here are some GIFs showcasing the gameplay and features of SkullKing:
 
-![Gameplay](path/to/gameplay.gif)
-![Login](path/to/login.gif)
-![Menu](path/to/menu.gif)
+![Login](./Login.gif)
+<!-- ![Menu](path/to/menu.gif) -->
+![Gameplay](./Game.gif)
 
 ## Installation
 
