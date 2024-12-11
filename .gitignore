@@ -69,3 +69,4 @@ compile_commands.json
 *.vsix
 
 SkullKing2/
+build/
